@@ -1,0 +1,249 @@
+//
+// This file is to be applied to every subproject.
+//
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE"
+    }
+}
+
+apply plugin: "io.spring.dependency-management"
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'jacoco'
+apply plugin: 'findbugs'
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+ }
+ 
+findbugs {
+    sourceSets = [sourceSets.main]
+    ignoreFailures = true    
+}
+
+//test {
+//    forkEvery 1    
+//}
+
+String mavenGroupId = 'co.runrightfast'
+String mavenVersion = '1.0-SNAPSHOT'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    mavenLocal();
+    mavenCentral();
+    jcenter();    
+}
+
+dependencyManagement {
+     dependencies {
+        dependency group: 'com.google.guava', name: 'guava', version: '18.0'
+        dependency group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+        dependency group: 'org.apache.commons', name: 'commons-collections4', version : '4.0'
+        dependency group: 'org.apache.commons', name: 'commons-compress', version: '1.9'
+        dependency group: 'commons-io', name:"commons-io", version:'2.4'
+        dependency group: 'commons-cli', name:"commons-cli", version:'1.3.1'
+        
+        dependency group: 'com.typesafe', name:'config', version:'1.3.0'
+        dependency group: 'com.google.protobuf', name:'protobuf-java', version:'3.0.0-beta-1'
+        dependency group: 'org.glassfish', name:'javax.json', version:'1.0.4'
+        dependency group: 'com.google.code.gson', name:'gson', version:'2.4'
+        
+        dependency group: 'org.projectlombok', name:'lombok', version:'1.16.6'
+        
+        dependency group:'org.elasticsearch', name:'elasticsearch', version:'1.7.1'
+        
+        dependencySet(group:'org.apache.solr', version: '5.3.0') {
+            entry 'solr-analysis-extras'
+            entry 'solr-analytics'
+            entry 'solr-cell'
+            entry 'solr-clustering'
+            entry 'solr-core'
+            entry 'solr-dataimporthandler'
+            entry 'solr-dataimporthandler-extras'
+            entry 'solr-langid'
+            entry 'solr-map-reduce'
+            entry 'solr-morphlines-cell'
+            entry 'solr-morphlines-core'
+            entry 'solr-solrj'
+            entry 'solr-uima'
+            entry 'solr-velocity'
+        }
+                
+        dependencySet(group:'com.hazelcast', version: '3.5.3') {
+            entry 'hazelcast-client'
+            entry 'hazelcast'
+        }
+          
+        dependencySet(group:'io.dropwizard.metrics', version: '3.1.2') {
+            entry 'metrics-core'
+            entry 'metrics-jvm'
+            entry 'metrics-healthchecks'
+        }
+        
+        dependencySet(group:'com.fasterxml.jackson.core', version: '2.6.3') {
+            entry 'jackson-databind'
+            entry 'jackson-core'
+            entry 'jackson-annotations'
+        }      
+        
+        dependencySet(group:'com.google.dagger', version: '2.0.1') {
+            entry 'dagger'
+            entry 'dagger-compiler'
+        }
+        
+        dependencySet(group:'com.orientechnologies', version: '2.1.4') {
+            entry 'orientdb-core'
+            entry 'orientdb-client'
+            entry 'orientdb-enterprise'
+            entry 'orientdb-server'
+            entry 'orientdb-graphdb'            
+            entry 'orientdb-object'
+            entry ('orientdb-distributed') {
+                exclude group: 'com.hazelcast', name: 'hazelcast-all'
+            }
+            entry 'orientdb-jdbc'
+            entry 'orientdb-etl'
+            entry 'orientdb-tools'
+            entry 'orientdb-lucene'
+        }
+        
+        dependencySet(group:'com.tinkerpop.blueprints', version: '2.6.0') {
+            entry 'blueprints-core'          
+            entry 'blueprints-orient-graph'  
+        }
+        
+        imports {
+            mavenBom 'org.apache.logging.log4j:log4j-bom:2.4.1'
+        }
+        
+        dependency 'com.lmax:disruptor:3.3.2'
+        
+        dependency 'io.reactivex:rxjava:1.0.14'
+        
+        dependencySet(group:'io.vertx', version: '3.1.0') {
+            entry 'vertx-core'
+            entry 'vertx-hazelcast'
+            entry 'vertx-web'
+            entry 'vertx-dropwizard-metrics'
+            entry 'vertx-service-factory'
+            entry 'vertx-service-proxy'
+            entry 'vertx-maven-service-factory'
+            entry 'vertx-http-service-factory'
+            entry 'vertx-auth-common'
+            entry 'vertx-auth-shiro'
+            entry 'vertx-auth-jwt'
+            entry 'vertx-rx-java'
+            entry 'vertx-unit'
+            entry 'vertx-mail-service'
+            entry 'vertx-mail-client'
+        }
+        
+        dependency group: 'org.hibernate', name:'hibernate-validator', version:'5.2.1.Final'
+        dependency group: 'javax.el', name:'javax.el-api', version:'2.2.5'
+        dependency group: 'org.glassfish.web', name:'javax.el', version:'2.2.6'
+        
+        dependency 'junit:junit:4.12'
+        dependency 'org.hamcrest:hamcrest-all:1.3'
+        dependency 'org.mockito:mockito-core:1.10.19'
+        
+        dependencySet(group:'org.slf4j', version: '1.7.12') {
+            entry 'slf4j-jdk14'
+        }
+        
+        dependencySet(group:'org.apache.shiro', version: '1.2.4') {
+            entry 'shiro-core'
+            entry 'shiro-aspectj'
+            entry 'shiro-cas'
+        }
+        
+        dependencySet(group:'org.bouncycastle', version: '1.53') {
+            entry 'bcprov-jdk15on'
+            entry 'bcpkix-jdk15on'
+            entry 'bcmail-jdk15on'
+            entry 'bcpg-jdk15on'
+        }
+     }
+}
+
+dependencies {
+//    compile 'org.projectlombok:lombok'
+//    
+//    compile 'org.slf4j:slf4j-jdk14'
+//
+//    compile 'com.google.guava:guava'
+//    
+//    compile 'org.apache.commons:commons-lang3'
+//    compile 'org.apache.commons:commons-collections4'
+//    compile 'commons-io:commons-io'
+//    compile 'commons-cli:commons-cli'
+//    
+//    compile 'com.typesafe:config'
+//    
+//    compile 'com.google.dagger:dagger'
+//    compile 'com.google.dagger:dagger-compiler'
+//    
+//    compile 'io.dropwizard.metrics:metrics-core'
+//    compile 'io.dropwizard.metrics:metrics-healthchecks'
+//    
+//    compile 'org.glassfish:javax.json'
+//    compile 'com.google.code.gson:gson'
+//    
+//    compile 'com.google.protobuf:protobuf-java'
+//    
+//    compile 'io.vertx:vertx-core'    
+//    compile 'io.vertx:vertx-dropwizard-metrics'
+//    compile 'io.vertx:vertx-hazelcast'
+        
+    // Adding dependencies here will add the dependencies to each subproject.
+    testCompile 'junit:junit'
+    testCompile 'org.hamcrest:hamcrest-all'
+    testCompile 'org.mockito:mockito-core'
+    testCompile 'io.vertx:vertx-unit'
+}
+
+String mavenArtifactId = name
+
+group = mavenGroupId
+version = mavenVersion
+
+task sourcesJar(type: Jar, dependsOn: classes, description: 'Creates a jar from the source files.') {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+}
+
+configure(install.repositories.mavenInstaller) {
+    pom.project {
+        groupId = mavenGroupId
+        artifactId = mavenArtifactId
+        version = mavenVersion
+    }
+}
+
+task createFolders(description: 'Creates the source folders if they do not exist.') doLast {
+    sourceSets*.allSource*.srcDirs*.each { File srcDir ->
+        if (!srcDir.isDirectory()) {
+            println "Creating source folder: ${srcDir}"
+            srcDir.mkdirs()
+        }
+    }
+}
+
+build.dependsOn javadoc, jacocoTestReport
