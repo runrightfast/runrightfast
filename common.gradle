@@ -35,7 +35,7 @@ findbugs {
 //}
 
 String mavenGroupId = 'co.runrightfast'
-String mavenVersion = '1.0-SNAPSHOT'
+String mavenVersion = '0.1-SNAPSHOT'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -131,7 +131,10 @@ dependencyManagement {
         
         dependency 'com.lmax:disruptor:3.3.2'
         
-        dependency 'io.reactivex:rxjava:1.0.14'
+        dependency 'io.reactivex:rxjava:1.0.14'        
+        dependency 'io.reactivex:rxjava-joins:0.22.0'        
+        dependency 'io.reactivex:rxjava-async-util:0.21.0'
+        dependency 'io.reactivex:rxjava-computation-expressions:0.21.0'
         
         dependencySet(group:'io.vertx', version: '3.1.0') {
             entry 'vertx-core'

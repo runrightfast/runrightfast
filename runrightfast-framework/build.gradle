@@ -1,10 +1,21 @@
 
 dependencies {
-    // TODO: Add dependencies here
-    //   but note that JUnit should have already been added in parent.gradle.
-    //   By default, only the Maven Central Repository is specified in
-    //   parent.gradle.
-    //
-    // You can read more about how to add dependency here:
-    //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
+    compile group: 'com.google.guava', name: 'guava'
+    compile group: 'org.apache.commons', name: 'commons-lang3'
+    compile group: 'org.apache.commons', name: 'commons-collections4'
+    
+    compile group: 'io.reactivex', name: 'rxjava'
+    compile group: 'io.reactivex', name: 'rxjava-joins'
+    compile group: 'io.reactivex', name: 'rxjava-async-util'
+    compile group: 'io.reactivex', name: 'rxjava-computation-expressions'
+    
+    compile group: 'io.vertx', name: 'vertx-core'
+    compile group: 'io.vertx', name: 'vertx-rx-java'
+    
+    
+    compile group: 'com.google.code.gson', name: 'gson'
+    
+    compile group: 'io.dropwizard.metrics', name: 'metrics-core'
+    
+    compile group: 'org.projectlombok', name:'lombok'
 }
