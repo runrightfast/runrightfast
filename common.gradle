@@ -178,6 +178,10 @@ dependencyManagement {
             entry 'bcmail-jdk15on'
             entry 'bcpg-jdk15on'
         }
+        
+        // A pure-Java Markdown processor based on a parboiled PEG parser supporting a number of extensions 
+        // https://github.com/sirthias/pegdown
+        dependency 'org.pegdown:pegdown:1.6.0'
      }
 }
 

@@ -13,7 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.command.domain;
+package co.runrightfast.app.domain;
 
 import lombok.extern.java.Log;
 import static org.hamcrest.CoreMatchers.is;
@@ -25,33 +25,30 @@ import org.junit.Test;
  * @author alfio
  */
 @Log
-public class CommandVersionTest {
+public class VersionTest {
 
-    /**
-     * Test of isCompatible method, of class CommandVersion.
-     */
     @Test
     public void testIsCompatible() {
-        assertThat(new CommandVersion(1, 0, 0).isCompatible(1, 0), is(true));
-        assertThat(new CommandVersion(1, 1, 0).isCompatible(1, 0), is(true));
-        assertThat(new CommandVersion(1, 1, 1).isCompatible(1, 0), is(true));
-        assertThat(new CommandVersion(1, 1, 1).isCompatible(1, 2), is(false));
-        assertThat(new CommandVersion(1, 1, 1).isCompatible(2, 0), is(false));
+        assertThat(new Version(1, 0, 0).isCompatible(1, 0), is(true));
+        assertThat(new Version(1, 1, 0).isCompatible(1, 0), is(true));
+        assertThat(new Version(1, 1, 1).isCompatible(1, 0), is(true));
+        assertThat(new Version(1, 1, 1).isCompatible(1, 2), is(false));
+        assertThat(new Version(1, 1, 1).isCompatible(2, 0), is(false));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidMajorVersion() {
-        new CommandVersion(0, 0, 0);
+        new Version(0, 0, 0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidMinorVersion() {
-        new CommandVersion(1, -1, 0);
+        new Version(1, -1, 0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidpatchVersion() {
-        new CommandVersion(1, 1, -1);
+        new Version(1, 1, -1);
     }
 
 }

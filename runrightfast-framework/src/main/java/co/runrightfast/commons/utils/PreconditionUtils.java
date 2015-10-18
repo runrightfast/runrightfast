@@ -16,6 +16,9 @@
 package co.runrightfast.commons.utils;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import java.util.Collection;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -29,6 +32,14 @@ public interface PreconditionUtils {
 
     static void greaterThanZero(final int n, final String argName) {
         checkArgument(n > 0, "%s must be > 0");
+    }
+
+    static void notBlank(final String val) {
+        checkArgument(StringUtils.isNotBlank(val));
+    }
+
+    static void notEmpty(final Collection<?> coll) {
+        checkArgument(CollectionUtils.isNotEmpty(coll));
     }
 
 }

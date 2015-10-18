@@ -15,6 +15,10 @@
  */
 package co.runrightfast.command.domain;
 
+import co.runrightfast.app.domain.Version;
+import co.runrightfast.exceptions.ShouldNeverHappenException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import lombok.Value;
 
 /**
@@ -24,22 +28,26 @@ import lombok.Value;
 @Value
 public class CommandId {
 
-    String namespace;
+    String catalog;
 
     String name;
 
-    CommandVersion version;
+    Version version;
 
     /**
      *
-     * @return uri format : {namespace}/{name}/{version.major}/{version.minor}
+     * @return uri format : {catalog}/{name}/{version.major}/{version.minor}
      */
-    public String getCommandURI() {
-        return new StringBuilder(namespace).append('/')
-                .append(name).append('/')
-                .append(version.getMajor()).append('/')
-                .append(version.getMinor())
-                .toString();
+    public URI getCommandURI() {
+        try {
+            return new URI(new StringBuilder(catalog).append('/')
+                    .append(name).append('/')
+                    .append(version.getMajor()).append('/')
+                    .append(version.getMinor())
+                    .toString());
+        } catch (final URISyntaxException ex) {
+            throw new ShouldNeverHappenException(ex);
+        }
     }
 
 }

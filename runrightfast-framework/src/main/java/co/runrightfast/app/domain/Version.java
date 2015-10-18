@@ -13,11 +13,14 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.command.domain;
+package co.runrightfast.app.domain;
 
 import static co.runrightfast.commons.utils.PreconditionUtils.greaterThanOrEqualZero;
 import static co.runrightfast.commons.utils.PreconditionUtils.greaterThanZero;
+import co.runrightfast.exceptions.ShouldNeverHappenException;
 import static com.google.common.base.Preconditions.checkNotNull;
+import java.net.URI;
+import java.net.URISyntaxException;
 import lombok.Value;
 
 /**
@@ -25,7 +28,7 @@ import lombok.Value;
  * @author alfio
  */
 @Value
-public class CommandVersion {
+public class Version {
 
     int major;
 
@@ -33,7 +36,7 @@ public class CommandVersion {
 
     int patch;
 
-    public CommandVersion(final int major, final int minor, final int patch) {
+    public Version(final int major, final int minor, final int patch) {
         greaterThanZero(major, "major");
         greaterThanOrEqualZero(minor, "minor");
         greaterThanOrEqualZero(patch, "patch");
@@ -49,7 +52,7 @@ public class CommandVersion {
      * @param version CpmmandVersion
      * @return true if the specified version is compatible with this version
      */
-    public boolean isCompatible(final CommandVersion version) {
+    public boolean isCompatible(final Version version) {
         checkNotNull(version);
         return isCompatible(version.major, version.minor);
     }
@@ -64,6 +67,19 @@ public class CommandVersion {
      */
     public boolean isCompatible(final int majorVersion, final int minorVersion) {
         return majorVersion == major && minorVersion <= minor;
+    }
+
+    public URI toURI() {
+        try {
+            return new URI(new StringBuilder()
+                    .append(major).append('/')
+                    .append(minor).append('/')
+                    .append(patch)
+                    .toString()
+            );
+        } catch (final URISyntaxException ex) {
+            throw new ShouldNeverHappenException(ex);
+        }
     }
 
 }

@@ -18,4 +18,6 @@ dependencies {
     compile group: 'io.dropwizard.metrics', name: 'metrics-core'
     
     compile group: 'org.projectlombok', name:'lombok'
+    
+    compile group: 'com.typesafe', name: 'config'
 }
