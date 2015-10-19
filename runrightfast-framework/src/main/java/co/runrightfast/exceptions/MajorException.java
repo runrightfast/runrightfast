@@ -15,6 +15,8 @@
  */
 package co.runrightfast.exceptions;
 
+import static co.runrightfast.exceptions.ApplicationExceptionSeverity.MAJOR;
+
 /**
  * If thrown, it indicates that the exception is major and requires attention.
  *
@@ -25,18 +27,19 @@ public class MajorException extends ApplicationException {
     private static final long serialVersionUID = 1L;
 
     public MajorException() {
+        super(MAJOR);
     }
 
     public MajorException(final String message) {
-        super(message);
+        super(MAJOR, message);
     }
 
     public MajorException(final String message, final Throwable cause) {
-        super(message, cause);
+        super(MAJOR, message, cause);
     }
 
     public MajorException(final Throwable cause) {
-        super(cause);
+        super(MAJOR, cause);
     }
 
 }

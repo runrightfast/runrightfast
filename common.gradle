@@ -91,6 +91,7 @@ dependencyManagement {
             entry 'metrics-core'
             entry 'metrics-jvm'
             entry 'metrics-healthchecks'
+            entry 'metrics-json'
         }
         
         dependencySet(group:'com.fasterxml.jackson.core', version: '2.6.3') {

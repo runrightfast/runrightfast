@@ -21,4 +21,9 @@
       <task-jvm-args/>
     </task>
   </built-in-tasks>
+  <auxiliary>
+    <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+      <word>Disruptor</word>
+    </spellchecker-wordlist>
+  </auxiliary>
 </gradle-project-properties>

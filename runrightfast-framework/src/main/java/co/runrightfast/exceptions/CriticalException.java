@@ -15,6 +15,8 @@
  */
 package co.runrightfast.exceptions;
 
+import static co.runrightfast.exceptions.ApplicationExceptionSeverity.CRITICAL;
+
 /**
  * If thrown, it indicates that the exception is critical and requires immediate attention.
  *
@@ -25,18 +27,19 @@ public class CriticalException extends ApplicationException {
     private static final long serialVersionUID = 1L;
 
     public CriticalException() {
+        super(CRITICAL);
     }
 
     public CriticalException(final String message) {
-        super(message);
+        super(CRITICAL, message);
     }
 
     public CriticalException(final String message, final Throwable cause) {
-        super(message, cause);
+        super(CRITICAL, message, cause);
     }
 
     public CriticalException(final Throwable cause) {
-        super(cause);
+        super(CRITICAL, cause);
     }
 
 }

@@ -17,6 +17,7 @@ package co.runrightfast.commons.utils;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import java.util.Collection;
+import lombok.NonNull;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,20 +27,36 @@ import org.apache.commons.lang3.StringUtils;
  */
 public interface PreconditionUtils {
 
+    static void greaterThanOrEqualZero(final int n) {
+        checkArgument(n >= 0);
+    }
+
     static void greaterThanOrEqualZero(final int n, final String argName) {
-        checkArgument(n >= 0, "%s must be >= 0");
+        checkArgument(n >= 0, "%s must be >= 0", argName);
+    }
+
+    static void greaterThanZero(final int n) {
+        checkArgument(n > 0);
     }
 
     static void greaterThanZero(final int n, final String argName) {
-        checkArgument(n > 0, "%s must be > 0");
+        checkArgument(n > 0, "%s must be > 0", argName);
     }
 
     static void notBlank(final String val) {
         checkArgument(StringUtils.isNotBlank(val));
     }
 
+    static void notBlank(final String val, @NonNull final String argName) {
+        checkArgument(StringUtils.isNotBlank(val), "%s cannot be blank", argName);
+    }
+
     static void notEmpty(final Collection<?> coll) {
         checkArgument(CollectionUtils.isNotEmpty(coll));
+    }
+
+    static void notEmpty(final Collection<?> coll, final String argName) {
+        checkArgument(CollectionUtils.isNotEmpty(coll), "%s cannot be empty", argName);
     }
 
 }

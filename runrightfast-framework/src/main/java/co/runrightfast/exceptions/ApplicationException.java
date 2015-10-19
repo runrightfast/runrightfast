@@ -15,6 +15,9 @@
  */
 package co.runrightfast.exceptions;
 
+import lombok.Getter;
+import lombok.NonNull;
+
 /**
  * Tracks metrics.
  *
@@ -24,19 +27,26 @@ public class ApplicationException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public ApplicationException() {
+    @Getter
+    protected final ApplicationExceptionSeverity severity;
+
+    public ApplicationException(@NonNull final ApplicationExceptionSeverity severity) {
+        this.severity = severity;
     }
 
-    public ApplicationException(final String message) {
+    public ApplicationException(@NonNull final ApplicationExceptionSeverity severity, final String message) {
         super(message);
+        this.severity = severity;
     }
 
-    public ApplicationException(final String message, final Throwable cause) {
+    public ApplicationException(@NonNull final ApplicationExceptionSeverity severity, final String message, final Throwable cause) {
         super(message, cause);
+        this.severity = severity;
     }
 
-    public ApplicationException(final Throwable cause) {
+    public ApplicationException(@NonNull final ApplicationExceptionSeverity severity, final Throwable cause) {
         super(cause);
+        this.severity = severity;
     }
 
 }

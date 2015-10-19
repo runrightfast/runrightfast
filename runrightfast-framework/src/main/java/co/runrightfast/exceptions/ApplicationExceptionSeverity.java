@@ -15,31 +15,23 @@
  */
 package co.runrightfast.exceptions;
 
-import static co.runrightfast.exceptions.ApplicationExceptionSeverity.MINOR;
-
 /**
- * Indicates that the exception is minor and application should be able to recover.
  *
  * @author alfio
  */
-public class MinorException extends ApplicationException {
+public enum ApplicationExceptionSeverity {
 
-    private static final long serialVersionUID = 1L;
-
-    public MinorException() {
-        super(MINOR);
-    }
-
-    public MinorException(final String message) {
-        super(MINOR, message);
-    }
-
-    public MinorException(final String message, final Throwable cause) {
-        super(MINOR, message, cause);
-    }
-
-    public MinorException(final Throwable cause) {
-        super(MINOR, cause);
-    }
+    /**
+     * indicates that the exception requires immediate attention.
+     */
+    CRITICAL,
+    /**
+     * indicates that the exception requires attention, but is less critical
+     */
+    MAJOR,
+    /**
+     * indicates that the exception should be investigated, but is lower priority
+     */
+    MINOR
 
 }
