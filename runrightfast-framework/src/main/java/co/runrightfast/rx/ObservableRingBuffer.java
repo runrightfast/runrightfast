@@ -15,40 +15,37 @@
  */
 package co.runrightfast.rx;
 
-import co.runrightfast.commons.disruptor.DisruptorConfig;
-import co.runrightfast.commons.disruptor.RingBufferReference;
-import com.google.common.util.concurrent.AbstractIdleService;
-import com.lmax.disruptor.RingBuffer;
-import com.lmax.disruptor.dsl.Disruptor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import com.google.common.util.concurrent.Service;
+import rx.Observable;
 
 /**
  *
  * @author alfio
+ * @param <A> Ring buffer item type
  */
-@RequiredArgsConstructor
-public class ObservableRingBuffer<A> extends AbstractIdleService {
+public interface ObservableRingBuffer<A> extends Service {
 
-    private Disruptor<RingBufferReference<A>> disruptor;
-    private RingBuffer<RingBufferReference<A>> ringBuffer;
+    Observable<A> getObservable();
 
-    @NonNull
-    private final DisruptorConfig<A> disruptorConfig;
-    private final Class<A> clazz;
+    /**
+     *
+     * @param msg message
+     * @return true if the value was published, false if there was insufficient capacity.
+     */
+    boolean publish(A msg);
 
-    @Override
-    protected void startUp() {
-        this.disruptor = disruptorConfig.newDisruptor(clazz);
-    }
+    long remainingCapacity();
 
-    @Override
-    protected void shutDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    int bufferSize();
 
-    public void publish(@NonNull final A msg) {
+    /**
+     * Get the current cursor value for the ring buffer. The cursor value is the last value that was published, or the highest available sequence that can be
+     * consumed.
+     *
+     * @return current cursor value
+     */
+    long cursor();
 
-    }
+    int observerCount();
 
 }

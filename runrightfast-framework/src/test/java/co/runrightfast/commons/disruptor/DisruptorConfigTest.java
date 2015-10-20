@@ -23,6 +23,7 @@ import com.lmax.disruptor.YieldingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -113,7 +114,7 @@ public class DisruptorConfigTest {
 
     @Test
     public void test_newDisruptor() throws InterruptedException {
-        final Executor executor = Executors.newSingleThreadExecutor();
+        final ExecutorService executor = Executors.newSingleThreadExecutor();
         final WaitStrategy waitStrategy = new YieldingWaitStrategy();
         final DisruptorConfig config = DisruptorConfig.builder()
                 .ringBufferSize(100)
@@ -123,7 +124,7 @@ public class DisruptorConfigTest {
                 .build();
 
         final Disruptor<RingBufferReference<Integer>> disruptor = config.newDisruptor(Integer.class);
-        final int msgCount = 10;
+        final int msgCount = 1000;
 
         final AtomicInteger msgReceivedCount = new AtomicInteger();
         disruptor.handleEventsWith((final RingBufferReference<Integer> event, final long sequence, final boolean endOfBatch) -> {
@@ -135,7 +136,8 @@ public class DisruptorConfigTest {
             ringBuffer.publishEvent(this::setEvent, i);
         }
         disruptor.shutdown();
-        assertThat(msgReceivedCount.get(), is(10));
+        executor.shutdown();
+        assertThat(msgReceivedCount.get(), is(msgCount));
     }
 
     private void setEvent(final RingBufferReference<Integer> event, final long sequence, final Integer data) {
