@@ -50,7 +50,7 @@ public class DisruptorConfigTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void test_negativeRinBufferSize() {
+    public void test_negativeRingBufferSize() {
         DisruptorConfig.builder().ringBufferSize(-1).build();
     }
 
@@ -135,7 +135,9 @@ public class DisruptorConfigTest {
         for (int i = 0; i < msgCount; i++) {
             ringBuffer.publishEvent(this::setEvent, i);
         }
+        // waits until all ring buffer events have been processed
         disruptor.shutdown();
+        // waits until all tasks queued for the thread are done
         executor.shutdown();
         assertThat(msgReceivedCount.get(), is(msgCount));
     }

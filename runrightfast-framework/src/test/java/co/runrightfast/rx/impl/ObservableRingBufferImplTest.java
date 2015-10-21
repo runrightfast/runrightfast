@@ -20,11 +20,13 @@ import co.runrightfast.commons.utils.ServiceUtils;
 import co.runrightfast.rx.ObservableRingBuffer;
 import com.lmax.disruptor.YieldingWaitStrategy;
 import com.lmax.disruptor.dsl.ProducerType;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
 import static java.util.logging.Level.SEVERE;
 import lombok.extern.java.Log;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 
 /**
@@ -81,30 +83,43 @@ public class ObservableRingBufferImplTest {
      * Test of publish method, of class ObservableRingBufferImpl.
      */
     @Test
-    public void testPublish_usingForkJoinPool() {
+    public void testPublish_usingWorkStealingPool_withSubscriber() {
+        final ExecutorService executor = Executors.newWorkStealingPool();
         final DisruptorConfig<String> disruptorConfig = DisruptorConfig.<String>builder()
                 .ringBufferSize(100)
-                .executor(ForkJoinPool.commonPool())
+                .executor(executor)
                 .producerType(ProducerType.SINGLE)
                 .waitStrategy(new YieldingWaitStrategy())
                 .build();
         final ObservableRingBuffer<String> observableRingBuffer = new ObservableRingBufferImpl<>(disruptorConfig, String.class);
+
+        final int msgCount = 100;
+        final int subscriberCount = 5;
+        final AtomicInteger messagesReceivedCounter = new AtomicInteger();
         try {
             ServiceUtils.start(observableRingBuffer);
-            final AtomicInteger counter = new AtomicInteger();
-            observableRingBuffer.getObservable().subscribe(
-                    msg -> log.info(String.format("%s : msg #%d", Thread.currentThread().getName(), counter.incrementAndGet())),
-                    error -> log.log(SEVERE, "Observable error", error),
-                    () -> log.info("completed")
-            );
+
+            for (int i = 1; i <= subscriberCount; i++) {
+                final int subscriberId = i;
+                observableRingBuffer.getObservable().subscribe(
+                        msg -> log.info(String.format("%s : [%d] : msg #%d", Thread.currentThread().getName(), subscriberId, messagesReceivedCounter.incrementAndGet())),
+                        error -> log.log(SEVERE, "Observable error", error),
+                        () -> log.info("completed")
+                );
+            }
+
+            assertThat(observableRingBuffer.observerCount(), is(subscriberCount));
+
             log.info(String.format("after started: %s", observableRingBuffer));
-            for (int i = 1; i <= 100; i++) {
+            for (int i = 1; i <= msgCount; i++) {
                 observableRingBuffer.publish("msg #" + i);
             }
             log.info(String.format("after publishing messages : %s", observableRingBuffer));
         } finally {
             ServiceUtils.stop(observableRingBuffer);
             log.info(String.format("after shutdown: %s", observableRingBuffer));
+            executor.shutdown();
+            assertThat(messagesReceivedCounter.get(), is(msgCount * subscriberCount));
         }
 
     }

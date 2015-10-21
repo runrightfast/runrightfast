@@ -19,16 +19,15 @@ import co.runrightfast.commons.disruptor.DisruptorConfig;
 import co.runrightfast.commons.disruptor.RingBufferReference;
 import co.runrightfast.logging.JsonLog;
 import co.runrightfast.rx.ObservableRingBuffer;
-import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.TimeoutException;
 import com.lmax.disruptor.dsl.Disruptor;
 import io.vertx.core.json.JsonObject;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
@@ -61,7 +60,7 @@ public class ObservableRingBufferImpl<A> extends AbstractIdleService implements 
     @Getter
     private Observable<A> observable;
 
-    private List<Subscriber<? super A>> subscribers = ImmutableList.of();
+    private final List<Subscriber<? super A>> subscribers = new CopyOnWriteArrayList<>();
 
     private static final JsonLog warning = JsonLog.newWarningLog(log, CLAZZ);
 
@@ -107,7 +106,7 @@ public class ObservableRingBufferImpl<A> extends AbstractIdleService implements 
 
         this.disruptor = null;
         this.ringBuffer = null;
-        this.subscribers = null;
+        this.subscribers.clear();
     }
 
     @Override
@@ -125,7 +124,7 @@ public class ObservableRingBufferImpl<A> extends AbstractIdleService implements 
 
     private void observableOnSubscribe(final Subscriber<? super A> subscriber) {
         if (!subscriber.isUnsubscribed()) {
-            this.subscribers = ImmutableList.<Subscriber<? super A>>builder().addAll(subscribers).add(subscriber).build();
+            this.subscribers.add(subscriber);
         }
     }
 
@@ -136,23 +135,19 @@ public class ObservableRingBufferImpl<A> extends AbstractIdleService implements 
             return;
         }
 
-        boolean filterUnsubscribed = false;
         for (final Subscriber<? super A> subscriber : subscribers) {
             if (subscriber.isUnsubscribed()) {
-                filterUnsubscribed = true;
+                this.subscribers.remove(subscriber);
                 continue;
             }
             try {
                 subscriber.onNext(msg.data);
             } catch (final Throwable t) {
                 subscriber.onError(t);
-                filterUnsubscribed = true;
+                this.subscribers.remove(subscriber);
             }
         }
 
-        if (filterUnsubscribed) {
-            this.subscribers = this.subscribers.stream().filter(this::isSubscribed).collect(Collectors.toList());
-        }
     }
 
     @Override
