@@ -15,8 +15,8 @@
  */
 package co.runrightfast.app;
 
-import co.runrightfast.app.alerts.Alert;
-import co.runrightfast.app.events.Event;
+import co.runrightfast.component.alerts.Alert;
+import co.runrightfast.component.events.Event;
 import java.util.Set;
 
 /**

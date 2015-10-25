@@ -13,7 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.app.events;
+package co.runrightfast.component.events;
 
 import co.runrightfast.app.ComponentId;
 import java.time.Instant;

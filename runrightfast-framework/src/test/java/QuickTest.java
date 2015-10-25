@@ -1,8 +1,8 @@
 
-import co.runrightfast.app.events.Event;
-import co.runrightfast.app.events.EventLevel;
-import static co.runrightfast.app.events.EventLevel.ERROR;
-import static co.runrightfast.app.events.EventLevel.INFO;
+import co.runrightfast.component.events.Event;
+import co.runrightfast.component.events.EventLevel;
+import static co.runrightfast.component.events.EventLevel.ERROR;
+import static co.runrightfast.component.events.EventLevel.INFO;
 import com.google.common.collect.ImmutableSet;
 import java.net.URI;
 import java.net.URISyntaxException;

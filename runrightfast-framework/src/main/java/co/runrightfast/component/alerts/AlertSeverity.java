@@ -13,20 +13,16 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.app.alerts;
-
-import co.runrightfast.app.events.Event;
+package co.runrightfast.component.alerts;
 
 /**
- * An event can trigger an alert.
- *
  *
  * @author alfio
  */
-public interface Alert {
+public enum AlertSeverity {
 
-    Event event();
-
-    AlertSeverity severity();
-
+    MINOR,
+    MAJOR,
+    CRITICAL,
+    FATAL
 }

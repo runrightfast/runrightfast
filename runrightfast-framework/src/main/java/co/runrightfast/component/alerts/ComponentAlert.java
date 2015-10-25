@@ -13,16 +13,17 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.app.alerts;
+package co.runrightfast.component.alerts;
+
+import co.runrightfast.component.events.ComponentEvent;
 
 /**
  *
  * @author alfio
  */
-public enum AlertSeverity {
+public interface ComponentAlert {
 
-    MINOR,
-    MAJOR,
-    CRITICAL,
-    FATAL
+    Alert getAlert();
+
+    ComponentEvent getEvent();
 }

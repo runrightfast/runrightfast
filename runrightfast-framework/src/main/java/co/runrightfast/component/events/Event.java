@@ -13,17 +13,31 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.app.alerts;
+package co.runrightfast.component.events;
 
-import co.runrightfast.app.events.ComponentEvent;
+import java.util.Optional;
 
 /**
+ * Event names should be unique within the component's scope.
+ *
+ * Enums should be created for all events. The enums would implement this interface.
+ *
  *
  * @author alfio
+ * @param <DATA> event data type. The data should be easily convertible to JSON using Gson.
  */
-public interface ComponentAlert {
+public interface Event<DATA> {
 
-    Alert getAlert();
+    String name();
 
-    ComponentEvent getEvent();
+    EventLevel eventLevel();
+
+    /**
+     * Not all events may have data.
+     *
+     * @return by default
+     */
+    default Optional<Class<DATA>> eventDataType() {
+        return Optional.empty();
+    }
 }
