@@ -13,7 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.app.domain;
+package co.runrightfast.app;
 
 import static co.runrightfast.commons.utils.AppUtils.uri;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -23,7 +23,7 @@ import java.net.URI;
  *
  * @author alfio
  */
-public interface Version {
+public interface Version extends Comparable<Version> {
 
     int getMajorVersion();
 
@@ -63,6 +63,23 @@ public interface Version {
                 .append(getPatchVersion())
                 .toString()
         );
+    }
+
+    @Override
+    default int compareTo(final Version other) {
+        if (other == null) {
+            return -1;
+        }
+
+        if (this.getMajorVersion() == other.getMajorVersion()) {
+            if (this.getMinorVersion() == other.getMinorVersion()) {
+                return this.getPatchVersion() - other.getPatchVersion();
+            }
+            return this.getMinorVersion() - other.getMinorVersion();
+        }
+
+        return this.getMajorVersion() - other.getMajorVersion();
+
     }
 
 }

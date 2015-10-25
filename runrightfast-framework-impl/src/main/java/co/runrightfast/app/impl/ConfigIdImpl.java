@@ -13,30 +13,20 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.app;
+package co.runrightfast.app.impl;
 
-import static co.runrightfast.commons.utils.AppUtils.uri;
+import co.runrightfast.app.ConfigId;
+import co.runrightfast.app.Version;
 import java.net.URI;
 
 /**
  *
  * @author alfio
  */
-public interface ArtifactId {
+public final class ConfigIdImpl extends ArtifactIdImpl implements ConfigId {
 
-    URI getNamespaceUri();
-
-    String getName();
-
-    Version getVersion();
-
-    default URI toUri() {
-        return uri(new StringBuilder(128)
-                .append(getNamespaceUri()).append('/')
-                .append(getName())
-                .append(getVersion().toURI())
-                .toString()
-        ).normalize();
+    public ConfigIdImpl(final URI namespaceUri, final String name, final Version version) {
+        super(namespaceUri, name, version);
     }
 
 }
