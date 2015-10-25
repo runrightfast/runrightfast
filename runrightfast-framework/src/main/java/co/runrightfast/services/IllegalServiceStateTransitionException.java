@@ -13,17 +13,31 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.commons.utils;
+package co.runrightfast.services;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import co.runrightfast.exceptions.MajorException;
+import com.google.common.util.concurrent.Service;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
  * @author alfio
  */
-public interface JsonUtils {
+@RequiredArgsConstructor
+public class IllegalServiceStateTransitionException extends MajorException {
 
-    public static final Gson gson = new GsonBuilder().create();
+    private static final long serialVersionUID = 1L;
+
+    @NonNull
+    private final Service.State from;
+
+    @NonNull
+    private final Service.State to;
+
+    @Override
+    public String getMessage() {
+        return String.format("service transition is not allowed: %s -> %s", from, to);
+    }
 
 }

@@ -13,17 +13,31 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.commons.utils;
+package co.runrightfast.incubator.app.domain;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import static co.runrightfast.commons.utils.PreconditionUtils.notBlank;
+import java.net.URI;
+import lombok.NonNull;
+import lombok.Value;
 
 /**
  *
  * @author alfio
  */
-public interface JsonUtils {
+@Value
+public class Component {
 
-    public static final Gson gson = new GsonBuilder().create();
+    Namespace namespace;
+
+    String name;
+
+    URI uri;
+
+    public Component(@NonNull final Namespace namespace, final String name) {
+        notBlank(name);
+        this.namespace = namespace;
+        this.name = name;
+        this.uri = namespace.getUri().resolve(new StringBuilder("/").append(name).toString());
+    }
 
 }

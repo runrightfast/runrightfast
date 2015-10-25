@@ -36,8 +36,10 @@ public class QuickTest {
 
         log.log(Level.INFO, "uri: {0}", uri);
 
-        assertThat(uri, is(new URI("/runrightfast.co/heartbeat/1/0")));
+        assertThat(uri, is(new URI("/runrightfast.co/heartbeat//1/0").normalize()));
         assertThat(uri, is(not(new URI("/runrightfast.co/heartbeat/1/1"))));
+
+        log.info(String.format("reolved URI : %s", new URI("/runrightfast.co/").resolve("event-logging-service/").resolve(new URI("1/0"))));
     }
 
 }

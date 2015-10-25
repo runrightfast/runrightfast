@@ -13,17 +13,18 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.commons.utils;
+package co.runrightfast.app;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.common.util.concurrent.Service;
+import java.util.Set;
 
 /**
  *
  * @author alfio
  */
-public interface JsonUtils {
+public interface RunRightFastApplication extends Service {
 
-    public static final Gson gson = new GsonBuilder().create();
+    ApplicationId getApplicationId();
 
+    Set<RunRightFastComponent> getComponents();
 }

@@ -17,8 +17,10 @@ package co.runrightfast.commons.utils;
 
 import co.runrightfast.exceptions.ApplicationException;
 import static co.runrightfast.exceptions.ApplicationExceptionSeverity.MAJOR;
+import co.runrightfast.services.IllegalServiceStateTransitionException;
 import com.google.common.util.concurrent.Service;
 import static com.google.common.util.concurrent.Service.State.NEW;
+import static com.google.common.util.concurrent.Service.State.RUNNING;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import static java.util.logging.Level.FINE;
@@ -51,7 +53,7 @@ public final class ServiceUtils {
             case RUNNING:
                 return;
             default:
-                throw new ApplicationException(MAJOR, "Service cannot be started because the service state is :" + service.state());
+                throw new IllegalServiceStateTransitionException(service.state(), RUNNING);
         }
 
     }

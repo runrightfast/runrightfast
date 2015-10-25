@@ -1,3 +1,5 @@
 /runrightfast/.nb-gradle/
 /runrightfast-framework/build/
 /.gradle/
+/runrightfast-incubator/build/
+/runrightfast-framework-impl/build/

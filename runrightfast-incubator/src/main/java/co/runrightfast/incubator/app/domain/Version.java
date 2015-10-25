@@ -13,23 +13,36 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.app.domain;
+package co.runrightfast.incubator.app.domain;
 
 import static co.runrightfast.commons.utils.AppUtils.uri;
+import static co.runrightfast.commons.utils.PreconditionUtils.greaterThanOrEqualZero;
+import static co.runrightfast.commons.utils.PreconditionUtils.greaterThanZero;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.net.URI;
+import lombok.Value;
 
 /**
  *
  * @author alfio
  */
-public interface Version {
+@Value
+public class Version {
 
-    int getMajorVersion();
+    int major;
 
-    int getMinorVersion();
+    int minor;
 
-    int getPatchVersion();
+    int patch;
+
+    public Version(final int major, final int minor, final int patch) {
+        greaterThanZero(major, "major");
+        greaterThanOrEqualZero(minor, "minor");
+        greaterThanOrEqualZero(patch, "patch");
+        this.major = major;
+        this.minor = minor;
+        this.patch = patch;
+    }
 
     /**
      * The specified version is compatible with this version if the major versions match and the specified minor version is less than or equal to this minor
@@ -38,9 +51,9 @@ public interface Version {
      * @param version CpmmandVersion
      * @return true if the specified version is compatible with this version
      */
-    default boolean isCompatible(final Version version) {
+    public boolean isCompatible(final Version version) {
         checkNotNull(version);
-        return isCompatible(version.getMajorVersion(), version.getMinorVersion());
+        return isCompatible(version.major, version.minor);
     }
 
     /**
@@ -51,16 +64,15 @@ public interface Version {
      * @param minorVersion minor version
      * @return true if the specified version is compatible with this version
      */
-    default boolean isCompatible(final int majorVersion, final int minorVersion) {
-        return majorVersion == getMajorVersion() && minorVersion <= getMinorVersion();
+    public boolean isCompatible(final int majorVersion, final int minorVersion) {
+        return majorVersion == major && minorVersion <= minor;
     }
 
-    default URI toURI() {
+    public URI toURI() {
         return uri(new StringBuilder()
-                .append('/')
-                .append(getMajorVersion()).append('/')
-                .append(getMinorVersion()).append('/')
-                .append(getPatchVersion())
+                .append(major).append('/')
+                .append(minor).append('/')
+                .append(patch)
                 .toString()
         );
     }

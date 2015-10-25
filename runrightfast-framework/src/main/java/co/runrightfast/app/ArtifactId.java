@@ -13,17 +13,31 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.commons.utils;
+package co.runrightfast.app;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import co.runrightfast.app.domain.Version;
+import static co.runrightfast.commons.utils.AppUtils.uri;
+import java.net.URI;
 
 /**
  *
  * @author alfio
  */
-public interface JsonUtils {
+public interface ArtifactId {
 
-    public static final Gson gson = new GsonBuilder().create();
+    URI getNamespaceUri();
+
+    String getName();
+
+    Version getVersion();
+
+    default URI toUri() {
+        return uri(new StringBuilder(128)
+                .append(getNamespaceUri()).append('/')
+                .append(getName())
+                .append(getVersion().toURI())
+                .toString()
+        ).normalize();
+    }
 
 }

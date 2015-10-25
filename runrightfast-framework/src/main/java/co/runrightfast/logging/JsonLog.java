@@ -15,9 +15,9 @@
  */
 package co.runrightfast.logging;
 
+import co.runrightfast.commons.utils.JsonUtils;
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import java.util.logging.Level;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -27,23 +27,34 @@ import lombok.NonNull;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
+ * Wraps a logger to enable logging messages as JSON
  *
  * @author alfio
  */
 public final class JsonLog {
 
-    private static final Gson gson = new GsonBuilder().create();
-
-    public static JsonLog newInfoLog(@NonNull final Logger logger, final String className) {
+    public static JsonLog infoJsonLog(@NonNull final Logger logger, final String className) {
         return new JsonLog(logger, INFO, className);
     }
 
-    public static JsonLog newWarningLog(@NonNull final Logger logger, final String className) {
+    public static JsonLog infoJsonLog(@NonNull final Logger logger, final String className, final Gson gson) {
+        return new JsonLog(logger, INFO, className, gson);
+    }
+
+    public static JsonLog warningJsonLog(@NonNull final Logger logger, final String className, final Gson gson) {
+        return new JsonLog(logger, WARNING, className, gson);
+    }
+
+    public static JsonLog warningJsonLog(@NonNull final Logger logger, final String className) {
         return new JsonLog(logger, WARNING, className);
     }
 
-    public static JsonLog newErrorLog(@NonNull final Logger logger, final String className) {
+    public static JsonLog errorJsonLog(@NonNull final Logger logger, final String className) {
         return new JsonLog(logger, SEVERE, className);
+    }
+
+    public static JsonLog errorJsonLog(@NonNull final Logger logger, final String className, final Gson gson) {
+        return new JsonLog(logger, SEVERE, className, gson);
     }
 
     private final Logger logger;
@@ -52,13 +63,35 @@ public final class JsonLog {
 
     private final String className;
 
+    private final Gson gson;
+
+    /**
+     *
+     * @param logger used as the underlying logger
+     * @param level the log level that will be used for all log messages
+     * @param className the name of the class where the log event occurred
+     */
     public JsonLog(@NonNull final Logger logger, @NonNull final Level level, final String className) {
         checkArgument(isNotBlank(className));
         this.logger = logger;
         this.level = level;
         this.className = className;
+        this.gson = JsonUtils.gson;
     }
 
+    public JsonLog(@NonNull final Logger logger, @NonNull final Level level, final String className, @NonNull final Gson gson) {
+        checkArgument(isNotBlank(className));
+        this.logger = logger;
+        this.level = level;
+        this.className = className;
+        this.gson = gson;
+    }
+
+    /**
+     *
+     * @param method the name of the method where the log event occurred
+     * @param message a simple POJO that will be converted to JSON
+     */
     public void log(final String method, @NonNull final Object message) {
         logger.logp(level, className, method, () -> gson.toJson(message));
     }

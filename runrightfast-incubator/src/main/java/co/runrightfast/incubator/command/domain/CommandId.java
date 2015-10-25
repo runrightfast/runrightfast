@@ -13,28 +13,41 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.commons.utils;
+package co.runrightfast.incubator.command.domain;
 
-import static co.runrightfast.commons.utils.PreconditionUtils.notBlank;
+import co.runrightfast.incubator.app.domain.Version;
 import co.runrightfast.exceptions.ShouldNeverHappenException;
-import java.lang.management.ManagementFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
+import lombok.Value;
 
 /**
  *
  * @author alfio
  */
-public interface AppUtils {
+@Value
+public class CommandId {
 
-    static final String JVM_ID = ManagementFactory.getRuntimeMXBean().getName();
+    String catalog;
 
-    static URI uri(final String uri) {
-        notBlank(uri);
+    String name;
+
+    Version version;
+
+    /**
+     *
+     * @return uri format : {catalog}/{name}/{version.major}/{version.minor}
+     */
+    public URI getCommandURI() {
         try {
-            return new URI(uri);
+            return new URI(new StringBuilder(catalog).append('/')
+                    .append(name).append('/')
+                    .append(version.getMajor()).append('/')
+                    .append(version.getMinor())
+                    .toString());
         } catch (final URISyntaxException ex) {
             throw new ShouldNeverHappenException(ex);
         }
     }
+
 }
