@@ -15,24 +15,10 @@
  */
 package co.runrightfast.app;
 
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.health.HealthCheckRegistry;
-import com.google.common.util.concurrent.Service;
-import java.util.Optional;
-
 /**
  *
  * @author alfio
  */
-public interface RunRightFastComponent extends Service {
+public interface ConfigId extends ArtifactId {
 
-    ComponentId getComponentId();
-
-    RunRightFastComponentConfig getRunRightFastComponentConfig();
-
-    Optional<MetricRegistry> getMetricRegistry();
-
-    Optional<HealthCheckRegistry> getHealthCheckRegistry();
-
-    RunRightFastComponentMetaData getMetaData();
 }

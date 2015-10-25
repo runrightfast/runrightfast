@@ -13,26 +13,16 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.app;
-
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.health.HealthCheckRegistry;
-import com.google.common.util.concurrent.Service;
-import java.util.Optional;
+package co.runrightfast.app.alerts;
 
 /**
  *
  * @author alfio
  */
-public interface RunRightFastComponent extends Service {
+public enum AlertSeverity {
 
-    ComponentId getComponentId();
-
-    RunRightFastComponentConfig getRunRightFastComponentConfig();
-
-    Optional<MetricRegistry> getMetricRegistry();
-
-    Optional<HealthCheckRegistry> getHealthCheckRegistry();
-
-    RunRightFastComponentMetaData getMetaData();
+    MINOR,
+    MAJOR,
+    CRITICAL,
+    FATAL
 }

@@ -13,26 +13,31 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.app;
+package co.runrightfast.app.events;
 
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.health.HealthCheckRegistry;
-import com.google.common.util.concurrent.Service;
 import java.util.Optional;
 
 /**
+ * Event names should be unique within the component's scope.
+ *
+ * Enums should be created for all events. The enums would implement this interface.
+ *
  *
  * @author alfio
+ * @param <DATA> event data type. The data should be easily convertible to JSON using Gson.
  */
-public interface RunRightFastComponent extends Service {
+public interface Event<DATA> {
 
-    ComponentId getComponentId();
+    String name();
 
-    RunRightFastComponentConfig getRunRightFastComponentConfig();
+    EventLevel eventLevel();
 
-    Optional<MetricRegistry> getMetricRegistry();
-
-    Optional<HealthCheckRegistry> getHealthCheckRegistry();
-
-    RunRightFastComponentMetaData getMetaData();
+    /**
+     * Not all events may have data.
+     *
+     * @return by default
+     */
+    default Optional<Class<DATA>> eventDataType() {
+        return Optional.empty();
+    }
 }

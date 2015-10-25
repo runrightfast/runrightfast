@@ -15,24 +15,26 @@
  */
 package co.runrightfast.app;
 
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.health.HealthCheckRegistry;
-import com.google.common.util.concurrent.Service;
-import java.util.Optional;
+import co.runrightfast.app.alerts.Alert;
+import co.runrightfast.app.events.Event;
+import java.util.Set;
 
 /**
  *
  * @author alfio
  */
-public interface RunRightFastComponent extends Service {
+public interface RunRightFastComponentMetaData {
 
-    ComponentId getComponentId();
+    /**
+     *
+     * @return the types of events that the component can emit
+     */
+    Set<Event> getEvents();
 
-    RunRightFastComponentConfig getRunRightFastComponentConfig();
-
-    Optional<MetricRegistry> getMetricRegistry();
-
-    Optional<HealthCheckRegistry> getHealthCheckRegistry();
-
-    RunRightFastComponentMetaData getMetaData();
+    /**
+     * All alerts must reference an event defined by {@link #getEvents() }
+     *
+     * @return the alerts that can triggered from events
+     */
+    Set<Alert> getAlerts();
 }

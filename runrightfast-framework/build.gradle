@@ -12,7 +12,8 @@ dependencies {
     compile group: 'io.vertx', name: 'vertx-rx-java'
         
     compile group: 'com.google.code.gson', name: 'gson'    
-    compile group: 'io.dropwizard.metrics', name: 'metrics-core'    
+    compile group: 'io.dropwizard.metrics', name: 'metrics-core'   
+    compile group: 'io.dropwizard.metrics', name:'metrics-healthchecks'
     compile group: 'org.projectlombok', name:'lombok'    
     compile group: 'com.typesafe', name: 'config'
     compile group: 'com.lmax', name: 'disruptor'

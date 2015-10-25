@@ -15,24 +15,24 @@
  */
 package co.runrightfast.app;
 
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.health.HealthCheckRegistry;
-import com.google.common.util.concurrent.Service;
+import com.typesafe.config.Config;
 import java.util.Optional;
 
 /**
  *
  * @author alfio
  */
-public interface RunRightFastComponent extends Service {
+public interface RunRightFastComponentConfig {
 
-    ComponentId getComponentId();
+    ConfigId getConfigId();
 
-    RunRightFastComponentConfig getRunRightFastComponentConfig();
+    Optional<Config> getConfig();
 
-    Optional<MetricRegistry> getMetricRegistry();
+    /**
+     * meant to store sensitive config info that we don't want to share, e.g., database credentials
+     *
+     * @return optional config
+     */
+    Optional<Config> getPrivateConfig();
 
-    Optional<HealthCheckRegistry> getHealthCheckRegistry();
-
-    RunRightFastComponentMetaData getMetaData();
 }
