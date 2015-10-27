@@ -58,6 +58,17 @@ public final class ComponentEventImpl<DATA> implements ComponentEvent<DATA> {
 
     Optional<Set<String>> tags;
 
+    /**
+     *
+     * @param componentId required
+     * @param id optional - new id generated if not supplied
+     * @param eventTimestamp optional - uses now if not specified
+     * @param jvmId optional - uses {@link AppUtils#JVM_ID} if not specified
+     * @param event required
+     * @param data conditionally required based on event
+     * @param exception optional
+     * @param tags optional
+     */
     public ComponentEventImpl(
             @NonNull final ComponentId componentId,
             final UUID id,
@@ -80,7 +91,7 @@ public final class ComponentEventImpl<DATA> implements ComponentEvent<DATA> {
 
         this.componentId = componentId;
         this.id = id != null ? id : UUID.randomUUID();
-        this.eventTimestamp = eventTimestamp;
+        this.eventTimestamp = eventTimestamp != null ? eventTimestamp : Instant.now();
         this.jvmId = StringUtils.isNotBlank(jvmId) ? jvmId : AppUtils.JVM_ID;
         this.event = event;
         this.data = data != null ? data : Optional.empty();

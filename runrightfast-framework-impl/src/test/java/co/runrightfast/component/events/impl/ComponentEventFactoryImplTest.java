@@ -17,6 +17,7 @@ package co.runrightfast.component.events.impl;
 
 import co.runrightfast.app.ComponentId;
 import static co.runrightfast.app.impl.FactoryImpl.factory;
+import co.runrightfast.commons.utils.AppUtils;
 import static co.runrightfast.commons.utils.AppUtils.uri;
 import co.runrightfast.component.events.ComponentEvent;
 import co.runrightfast.component.events.ComponentEventFactory;
@@ -27,6 +28,7 @@ import java.util.Set;
 import lombok.Value;
 import lombok.extern.java.Log;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 
@@ -60,11 +62,8 @@ public class ComponentEventFactoryImplTest {
 
     }
 
-    /**
-     * Test of componentEvent method, of class ComponentEventFactoryImpl.
-     */
     @Test
-    public void testComponentEvent_Event_StringArr() {
+    public void testComponentEvent() {
         final Event event = TestEvent.EVENT_1;
         String[] tags = {"FOO", "BAR"};
 
@@ -78,6 +77,16 @@ public class ComponentEventFactoryImplTest {
         assertThat(compEvent1.getTags().get(), is(ImmutableSet.copyOf(tags)));
         final Set<String> eventTags = (Set<String>) compEvent1.getTags().get();
         assertThat(eventTags, is(ImmutableSet.copyOf(tags)));
+        assertThat(compEvent1.getJvmId(), is(AppUtils.JVM_ID));
+        assertThat(compEvent1.getEventTimestamp(), is(notNullValue()));
+        assertThat(compEvent1.getId(), is(notNullValue()));
+
+        // TODO - more tests
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testComponentEvent_withNullComponentId() {
+        new ComponentEventFactoryImpl(null);
     }
 
 }
