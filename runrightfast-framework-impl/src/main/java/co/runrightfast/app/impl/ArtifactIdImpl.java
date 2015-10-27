@@ -39,10 +39,16 @@ public abstract class ArtifactIdImpl implements ArtifactId {
     @Getter
     protected final Version version;
 
+    /**
+     *
+     * @param namespaceUri will be normalized
+     * @param name must not be blank and will be trimmed
+     * @param version artifact version
+     */
     public ArtifactIdImpl(@NonNull final URI namespaceUri, final String name, @NonNull final Version version) {
         notBlank(name);
-        this.namespaceUri = namespaceUri;
-        this.name = name;
+        this.namespaceUri = namespaceUri.normalize();
+        this.name = name.trim();
         this.version = version;
     }
 

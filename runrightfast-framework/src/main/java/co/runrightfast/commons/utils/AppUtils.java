@@ -27,12 +27,17 @@ import java.net.URISyntaxException;
  */
 public interface AppUtils {
 
-    static final String JVM_ID = ManagementFactory.getRuntimeMXBean().getName();
+    String JVM_ID = ManagementFactory.getRuntimeMXBean().getName();
 
+    /**
+     *
+     * @param uri uri
+     * @return normalized URI
+     */
     static URI uri(final String uri) {
         notBlank(uri);
         try {
-            return new URI(uri);
+            return new URI(uri).normalize();
         } catch (final URISyntaxException ex) {
             throw new ShouldNeverHappenException(ex);
         }
