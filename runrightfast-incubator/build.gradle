@@ -1,3 +1,10 @@
 dependencies {
-   compile project(':runrightfast-framework')
+    compile project(':runrightfast-framework')
+   
+    compile group:'org.qi4j.core', name:'org.qi4j.core.runtime'
+    compile group:'org.qi4j.extension', name:'org.qi4j.extension.entitystore-memory'
+    compile group:'org.qi4j.extension', name:'org.qi4j.extension.indexing-elasticsearch'
+    
+    compile group: 'io.dropwizard.metrics', name: 'metrics-core'   
+    compile group: 'io.dropwizard.metrics', name:'metrics-healthchecks'
 }

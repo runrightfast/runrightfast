@@ -47,6 +47,10 @@ repositories {
     jcenter();    
 }
 
+ext {
+    ZEST_VERSION = '2.1'
+}
+
 dependencyManagement {
      dependencies {
         dependency group: 'com.google.guava', name: 'guava', version: '18.0'
@@ -180,9 +184,37 @@ dependencyManagement {
             entry 'bcpg-jdk15on'
         }
         
+        dependencySet(group:'org.qi4j.core', version: "${ZEST_VERSION}") {
+            entry 'org.qi4j.core.bootstrap'
+            entry 'org.qi4j.core.runtime'
+            entry 'org.qi4j.core.testsupport'
+        }
+        
+        dependencySet(group:'org.qi4j.extension', version: "${ZEST_VERSION}") {
+            entry 'org.qi4j.extension.entitystore-memory'
+            entry 'org.qi4j.extension.entitystore-leveldb'
+            entry 'org.qi4j.extension.indexing-elasticsearch'
+            entry 'org.qi4j.extension.entitystore-file'
+            entry 'org.qi4j.extension.metrics-yammer'
+        }
+        
+        dependencySet(group:'org.qi4j.library', version: "${ZEST_VERSION}") {
+            entry 'org.qi4j.library.alarm'
+            entry 'org.qi4j.library.circuitbreaker'
+            entry 'org.qi4j.library.constraints'
+            entry 'org.qi4j.library.metrics'
+        }
+        
+        dependencySet(group:'org.qi4j.tool', version: "${ZEST_VERSION}") {
+            entry 'org.qi4j.tool.model-detail'
+            entry 'org.qi4j.tool.envisage'
+        }
+        
         // A pure-Java Markdown processor based on a parboiled PEG parser supporting a number of extensions 
         // https://github.com/sirthias/pegdown
         dependency 'org.pegdown:pegdown:1.6.0'
+        
+        dependency 'joda-time:joda-time:2.9'
      }
 }
 
@@ -220,6 +252,7 @@ dependencies {
     testCompile 'org.hamcrest:hamcrest-all'
     testCompile 'org.mockito:mockito-core'
     testCompile 'io.vertx:vertx-unit'
+    testCompile 'org.qi4j.core:org.qi4j.core.testsupport'
 }
 
 String mavenArtifactId = name

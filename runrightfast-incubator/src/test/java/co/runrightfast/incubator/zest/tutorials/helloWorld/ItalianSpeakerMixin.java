@@ -13,19 +13,17 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.commons.utils;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+package co.runrightfast.incubator.zest.tutorials.helloWorld;
 
 /**
  *
  * @author alfio
  */
-public interface JsonUtils {
+public class ItalianSpeakerMixin implements Speaker {
 
-    public static final Gson gson = new GsonBuilder().create();
-
-    public static final Gson prettyPrintingGson = new GsonBuilder().setPrettyPrinting().create();
+    @Override
+    public String sayHello() {
+        return "Ciao mundo !!!";
+    }
 
 }

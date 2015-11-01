@@ -38,7 +38,11 @@ public final class RingBufferReference<DATA> {
      * @return Disruptor
      */
     public static <A> Disruptor<RingBufferReference<A>> disruptor(final Class<A> dataClass, final int ringBufferSize) {
-        return new Disruptor<>(RingBufferReference<A>::new, ringBufferSize, ForkJoinPool.commonPool());
+        return new Disruptor<>(
+                RingBufferReference<A>::new,
+                ringBufferSize,
+                ForkJoinPool.commonPool()
+        );
     }
 
     /**
@@ -57,7 +61,7 @@ public final class RingBufferReference<DATA> {
             final ProducerType producerType,
             final WaitStrategy waitStrategy
     ) {
-        return new Disruptor<>(RingBufferReference<A>::new, ringBufferSize, ForkJoinPool.commonPool(), producerType, waitStrategy);
+        return disruptor(dataClass, ringBufferSize, producerType, waitStrategy, ForkJoinPool.commonPool());
     }
 
     public static <A> Disruptor<RingBufferReference<A>> disruptor(
@@ -67,7 +71,13 @@ public final class RingBufferReference<DATA> {
             final WaitStrategy waitStrategy,
             final Executor executor
     ) {
-        return new Disruptor<>(RingBufferReference<A>::new, ringBufferSize, executor, producerType, waitStrategy);
+        return new Disruptor<>(
+                RingBufferReference<A>::new,
+                ringBufferSize,
+                executor,
+                producerType,
+                waitStrategy
+        );
     }
 
 }

@@ -13,19 +13,31 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.commons.utils;
+package co.runrightfast.zest.commons.concurrent;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import co.runrightfast.exceptions.MajorException;
 
 /**
  *
  * @author alfio
  */
-public interface JsonUtils {
+public class TaskRejectedException extends MajorException {
 
-    public static final Gson gson = new GsonBuilder().create();
+    private static final long serialVersionUID = 1L;
 
-    public static final Gson prettyPrintingGson = new GsonBuilder().setPrettyPrinting().create();
+    public TaskRejectedException() {
+    }
+
+    public TaskRejectedException(final String message) {
+        super(message);
+    }
+
+    public TaskRejectedException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public TaskRejectedException(final Throwable cause) {
+        super(cause);
+    }
 
 }

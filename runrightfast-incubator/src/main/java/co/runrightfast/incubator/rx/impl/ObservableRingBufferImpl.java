@@ -15,15 +15,16 @@
  */
 package co.runrightfast.incubator.rx.impl;
 
+import co.runrightfast.commons.utils.JsonUtils;
 import co.runrightfast.incubator.commons.disruptor.DisruptorConfig;
 import co.runrightfast.incubator.commons.disruptor.RingBufferReference;
-import co.runrightfast.logging.JsonLog;
 import co.runrightfast.incubator.rx.ObservableRingBuffer;
+import co.runrightfast.logging.JsonLog;
 import com.google.common.util.concurrent.AbstractIdleService;
+import com.google.gson.JsonObject;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.TimeoutException;
 import com.lmax.disruptor.dsl.Disruptor;
-import io.vertx.core.json.JsonObject;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
@@ -175,13 +176,13 @@ public class ObservableRingBufferImpl<A> extends AbstractIdleService implements 
         if (!isRunning()) {
             return "{}";
         }
-        return new JsonObject()
-                .put("remainingCapacity", remainingCapacity())
-                .put("observerCount", observerCount())
-                .put("bufferSize", bufferSize())
-                .put("cursor", cursor())
-                .put("ringBufferDataType", ringBufferDataType.getName())
-                .encodePrettily();
+        final JsonObject json = new JsonObject();
+        json.addProperty("remainingCapacity", remainingCapacity());
+        json.addProperty("observerCount", observerCount());
+        json.addProperty("bufferSize", bufferSize());
+        json.addProperty("cursor", cursor());
+        json.addProperty("ringBufferDataType", ringBufferDataType.getName());
+        return JsonUtils.prettyPrintingGson.toJson(json);
     }
 
 }

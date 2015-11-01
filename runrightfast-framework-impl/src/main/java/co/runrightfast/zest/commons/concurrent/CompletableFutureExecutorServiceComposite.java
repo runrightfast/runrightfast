@@ -13,19 +13,17 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.commons.utils;
+package co.runrightfast.zest.commons.concurrent;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.qi4j.api.service.ServiceActivation;
+import org.qi4j.api.service.ServiceComposite;
 
 /**
  *
  * @author alfio
  */
-public interface JsonUtils {
-
-    public static final Gson gson = new GsonBuilder().create();
-
-    public static final Gson prettyPrintingGson = new GsonBuilder().setPrettyPrinting().create();
-
+public interface CompletableFutureExecutorServiceComposite extends
+        CompletableFutureExecutorService,
+        ServiceComposite,
+        ServiceActivation {
 }

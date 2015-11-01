@@ -3,20 +3,20 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3'
     compile group: 'org.apache.commons', name: 'commons-collections4'
     
-    compile group: 'io.reactivex', name: 'rxjava'
-    compile group: 'io.reactivex', name: 'rxjava-joins'
-    compile group: 'io.reactivex', name: 'rxjava-async-util'
-    compile group: 'io.reactivex', name: 'rxjava-computation-expressions'
-    
-    compile group: 'io.vertx', name: 'vertx-core'
-    compile group: 'io.vertx', name: 'vertx-rx-java'
-        
-    compile group: 'com.google.code.gson', name: 'gson'    
-    compile group: 'io.dropwizard.metrics', name: 'metrics-core'   
-    compile group: 'io.dropwizard.metrics', name:'metrics-healthchecks'
+    compile group: 'com.google.code.gson', name: 'gson'        
     compile group: 'org.projectlombok', name:'lombok'    
     compile group: 'com.typesafe', name: 'config'
     compile group: 'com.lmax', name: 'disruptor'
     compile group: 'com.google.code.gson', name:'gson'
     
+    compile group: 'io.reactivex', name: 'rxjava'
+    compile group: 'io.reactivex', name: 'rxjava-joins'
+    compile group: 'io.reactivex', name: 'rxjava-async-util'
+    compile group: 'io.reactivex', name: 'rxjava-computation-expressions'
+    
+    compile group:'org.qi4j.core', name:'org.qi4j.core.bootstrap'
+    runtime group:'org.qi4j.core', name:'org.qi4j.core.runtime'    
+    compile group:'org.qi4j.library', name:'org.qi4j.library.constraints'
+    compile group:'org.qi4j.library', name:'org.qi4j.library.metrics'
+    compile group:'org.qi4j.extension', name:'org.qi4j.extension.metrics-yammer'
 }

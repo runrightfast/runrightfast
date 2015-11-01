@@ -13,20 +13,20 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.component.events;
+package co.runrightfast.commons.concurrent;
 
 /**
  *
  * @author alfio
  */
-public interface ComponentEventFactory {
+public class ApplicationThreadGroup extends ThreadGroup {
 
-    ComponentEvent componentEvent(Event event, String... tags);
+    public ApplicationThreadGroup(final String name) {
+        super(name);
+    }
 
-    ComponentEvent componentEvent(Event event, Throwable exception, String... tags);
-
-    <DATA> ComponentEvent<DATA> componentEvent(Event<DATA> event, Class<DATA> eventDataType, DATA data, String... tags);
-
-    <DATA> ComponentEvent<DATA> componentEvent(Event<DATA> event, Class<DATA> eventDataType, DATA data, Throwable exception, String... tags);
+    public ApplicationThreadGroup(final ThreadGroup parent, final String name) {
+        super(parent, name);
+    }
 
 }

@@ -13,31 +13,18 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.component;
+package co.runrightfast.zest.commons.concurrent;
 
-import com.typesafe.config.Config;
-import java.net.URI;
-import java.util.Optional;
-import lombok.NonNull;
-import lombok.Value;
+import java.util.function.Consumer;
 
 /**
  *
  * @author alfio
  */
-@Value
-public class RunRightFastComponentConfig {
+public interface AsyncExecutorService {
 
-    @NonNull
-    URI componentVersionUri;
+    void submit(Runnable task) throws TaskRejectedException;
 
-    @NonNull
-    Optional<Config> config;
-
-    /**
-     * meant to store sensitive config info that we don't want to share, e.g., database credentials
-     */
-    @NonNull
-    Optional<Config> privateConfig;
+    <INPUT> void submit(INPUT input, Consumer<INPUT> task) throws TaskRejectedException;
 
 }

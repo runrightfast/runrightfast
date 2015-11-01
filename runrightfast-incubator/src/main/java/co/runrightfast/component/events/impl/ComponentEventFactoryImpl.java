@@ -21,6 +21,7 @@ import co.runrightfast.component.events.ComponentEventFactory;
 import co.runrightfast.component.events.Event;
 import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ArrayUtils;
@@ -33,6 +34,7 @@ import org.apache.commons.lang3.ArrayUtils;
 public class ComponentEventFactoryImpl implements ComponentEventFactory {
 
     @NonNull
+    @Getter
     private final ComponentId componentId;
 
     @Override
