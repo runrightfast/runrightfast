@@ -13,18 +13,31 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.commons.concurrent;
+package co.runrightfast.zest.composites.services.concurrent;
 
-import co.runrightfast.zest.composites.services.concurrent.CompletableFutureExecutorService;
-import org.qi4j.api.service.ServiceActivation;
-import org.qi4j.api.service.ServiceComposite;
+import co.runrightfast.exceptions.MajorException;
 
 /**
  *
  * @author alfio
  */
-public interface CompletableFutureExecutorServiceComposite extends
-        CompletableFutureExecutorService,
-        ServiceComposite,
-        ServiceActivation {
+public class TaskRejectedException extends MajorException {
+
+    private static final long serialVersionUID = 1L;
+
+    public TaskRejectedException() {
+    }
+
+    public TaskRejectedException(final String message) {
+        super(message);
+    }
+
+    public TaskRejectedException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public TaskRejectedException(final Throwable cause) {
+        super(cause);
+    }
+
 }

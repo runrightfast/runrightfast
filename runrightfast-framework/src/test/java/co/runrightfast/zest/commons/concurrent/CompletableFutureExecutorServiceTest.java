@@ -15,6 +15,8 @@
  */
 package co.runrightfast.zest.commons.concurrent;
 
+import co.runrightfast.zest.composites.services.concurrent.TaskRejectedException;
+import co.runrightfast.zest.composites.services.concurrent.CompletableFutureExecutorService;
 import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;

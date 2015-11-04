@@ -13,31 +13,18 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.commons.concurrent;
+package co.runrightfast.zest.concurrent.disruptor;
 
-import co.runrightfast.exceptions.MajorException;
+import org.qi4j.api.property.Property;
+import org.qi4j.library.constraints.annotation.GreaterThan;
 
 /**
  *
  * @author alfio
  */
-public class TaskRejectedException extends MajorException {
+public interface DisruptorConfig {
 
-    private static final long serialVersionUID = 1L;
-
-    public TaskRejectedException() {
-    }
-
-    public TaskRejectedException(final String message) {
-        super(message);
-    }
-
-    public TaskRejectedException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
-
-    public TaskRejectedException(final Throwable cause) {
-        super(cause);
-    }
+    @GreaterThan(0)
+    Property<Integer> ringBufferSize();
 
 }

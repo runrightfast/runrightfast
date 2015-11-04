@@ -13,18 +13,23 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.commons.concurrent;
+package co.runrightfast.zest.composites.services.concurrent.config;
 
-import co.runrightfast.zest.composites.services.concurrent.CompletableFutureExecutorService;
-import org.qi4j.api.service.ServiceActivation;
-import org.qi4j.api.service.ServiceComposite;
+import org.qi4j.api.common.UseDefaults;
+import org.qi4j.api.property.Property;
+import org.qi4j.library.constraints.annotation.Range;
 
 /**
  *
  * @author alfio
  */
-public interface CompletableFutureExecutorServiceComposite extends
-        CompletableFutureExecutorService,
-        ServiceComposite,
-        ServiceActivation {
+public interface ThreadFactoryConfig {
+
+    @UseDefaults
+    Property<Boolean> daemon();
+
+    @UseDefaults
+    @Range(min = Thread.MIN_PRIORITY, max = Thread.MAX_PRIORITY)
+    Property<Integer> threadPriority();
+
 }

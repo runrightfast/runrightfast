@@ -13,12 +13,14 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.commons.concurrent;
+package co.runrightfast.zest.composites.services.concurrent;
 
+import static co.runrightfast.zest.composites.services.concurrent.CompletableFutureExecutorService.Nothing.NOTHING;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import lombok.NonNull;
 
 /**
  *
@@ -37,10 +39,19 @@ public interface CompletableFutureExecutorService {
 
     <OUTPUT> CompletableFuture<OUTPUT> submit(Supplier<OUTPUT> task) throws TaskRejectedException;
 
-    <INPUT, OUTPUT> CompletableFuture<OUTPUT> submit(INPUT input, Function<INPUT, OUTPUT> task) throws TaskRejectedException;
+    default <INPUT, OUTPUT> CompletableFuture<OUTPUT> submit(@NonNull INPUT input, @NonNull Function<INPUT, OUTPUT> task) throws TaskRejectedException {
+        return submit(() -> task.apply(input));
+    }
 
-    CompletableFuture<Nothing> submit(Runnable task) throws TaskRejectedException;
+    default CompletableFuture<Nothing> submit(final Runnable task) throws TaskRejectedException {
+        return submit(() -> {
+            task.run();
+            return NOTHING;
+        });
+    }
 
-    <INPUT> CompletableFuture<Nothing> submit(INPUT input, Consumer<INPUT> task) throws TaskRejectedException;
+    default <INPUT> CompletableFuture<Nothing> submit(@NonNull final INPUT input, @NonNull final Consumer<INPUT> task) throws TaskRejectedException {
+        return submit(() -> task.accept(input));
+    }
 
 }

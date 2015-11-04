@@ -13,18 +13,21 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.commons.concurrent;
+package co.runrightfast.zest.composites.services.concurrent;
 
-import co.runrightfast.zest.composites.services.concurrent.CompletableFutureExecutorService;
-import org.qi4j.api.service.ServiceActivation;
-import org.qi4j.api.service.ServiceComposite;
+import java.util.function.Consumer;
+import lombok.NonNull;
 
 /**
  *
  * @author alfio
  */
-public interface CompletableFutureExecutorServiceComposite extends
-        CompletableFutureExecutorService,
-        ServiceComposite,
-        ServiceActivation {
+public interface AsyncExecutorService {
+
+    void submit(Runnable task) throws TaskRejectedException;
+
+    default <INPUT> void submit(@NonNull final INPUT input, @NonNull final Consumer<INPUT> task) throws TaskRejectedException {
+        submit(() -> task.accept(input));
+    }
+
 }

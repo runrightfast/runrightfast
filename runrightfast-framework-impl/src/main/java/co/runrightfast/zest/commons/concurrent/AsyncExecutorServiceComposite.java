@@ -15,6 +15,7 @@
  */
 package co.runrightfast.zest.commons.concurrent;
 
+import co.runrightfast.zest.composites.services.concurrent.AsyncExecutorService;
 import org.qi4j.api.service.ServiceActivation;
 import org.qi4j.api.service.ServiceComposite;
 

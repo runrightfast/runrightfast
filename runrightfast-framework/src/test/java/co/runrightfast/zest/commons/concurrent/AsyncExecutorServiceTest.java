@@ -15,6 +15,8 @@
  */
 package co.runrightfast.zest.commons.concurrent;
 
+import co.runrightfast.zest.composites.services.concurrent.TaskRejectedException;
+import co.runrightfast.zest.composites.services.concurrent.AsyncExecutorService;
 import java.util.function.Consumer;
 import lombok.extern.java.Log;
 import org.junit.Test;

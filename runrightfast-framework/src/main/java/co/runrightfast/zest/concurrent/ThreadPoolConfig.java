@@ -13,14 +13,14 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.commons.concurrent;
+package co.runrightfast.zest.concurrent;
 
-import org.qi4j.api.common.Optional;
+import co.runrightfast.zest.composites.services.concurrent.config.ThreadFactoryConfig;
+import org.qi4j.api.common.UseDefaults;
 import org.qi4j.api.configuration.ConfigurationComposite;
 import org.qi4j.api.property.Property;
 import org.qi4j.library.constraints.annotation.GreaterThan;
 import org.qi4j.library.constraints.annotation.NotEmpty;
-import org.qi4j.library.constraints.annotation.Range;
 
 /**
  * A thread pool maps to a ThreadGroup
@@ -29,13 +29,8 @@ import org.qi4j.library.constraints.annotation.Range;
  */
 public interface ThreadPoolConfig extends ConfigurationComposite {
 
-    /**
-     * The pool name corresponds to the name of the ThreadGroup that the Thread belongs to.
-     *
-     * @return pool name
-     */
     @NotEmpty
-    Property<String> threadPoolName();
+    Property<ThreadFactoryConfig> threadFactoryConfig();
 
     @GreaterThan(0)
     Property<Integer> corePoolSize();
@@ -50,26 +45,7 @@ public interface ThreadPoolConfig extends ConfigurationComposite {
      */
     Property<DurationTime> keepAliveTime();
 
-    @Optional
-    @NotEmpty
-    Property<String> parentThreadPoolName();
-
-    /**
-     *
-     * @return if null, then daemon = false
-     */
-    @Optional
-    Property<Boolean> daemon();
-
-    @Optional
-    @Range(min = Thread.MIN_PRIORITY, max = Thread.MAX_PRIORITY)
-    Property<Integer> threadPriority();
-
-    /**
-     *
-     * @return if null, then default value is false
-     */
-    @Optional
+    @UseDefaults
     Property<Boolean> allowCoreThreadTimeOut();
 
 }

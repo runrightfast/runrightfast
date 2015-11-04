@@ -13,20 +13,21 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.commons.concurrent;
+package co.runrightfast.zest.composites.services;
 
-import java.util.concurrent.TimeUnit;
-import org.qi4j.api.property.Property;
-import org.qi4j.library.constraints.annotation.GreaterThan;
+import com.google.gson.JsonObject;
 
 /**
  *
  * @author alfio
  */
-public interface DurationTime {
+public interface ServiceInfo {
 
-    @GreaterThan(0)
-    Property<Integer> time();
+    JsonObject config();
 
-    Property<TimeUnit> timeUnit();
+    JsonObject metrics();
+
+    JsonObject healthchecks();
+
+    JsonObject runtimeInfo();
 }

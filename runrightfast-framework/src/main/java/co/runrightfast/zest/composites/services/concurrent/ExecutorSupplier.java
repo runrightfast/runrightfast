@@ -13,18 +13,16 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.commons.concurrent;
+package co.runrightfast.zest.composites.services.concurrent;
 
-import co.runrightfast.zest.composites.services.concurrent.CompletableFutureExecutorService;
-import org.qi4j.api.service.ServiceActivation;
-import org.qi4j.api.service.ServiceComposite;
+import java.util.concurrent.Executor;
 
 /**
  *
  * @author alfio
  */
-public interface CompletableFutureExecutorServiceComposite extends
-        CompletableFutureExecutorService,
-        ServiceComposite,
-        ServiceActivation {
+@FunctionalInterface
+public interface ExecutorSupplier {
+
+    Executor executor();
 }

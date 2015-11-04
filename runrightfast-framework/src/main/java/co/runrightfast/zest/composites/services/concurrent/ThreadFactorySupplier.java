@@ -13,18 +13,20 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.commons.concurrent;
+package co.runrightfast.zest.composites.services.concurrent;
 
-import java.util.function.Consumer;
+import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
+import java.util.concurrent.ThreadFactory;
 
 /**
+ * Supplies thread factories for the current module.
  *
  * @author alfio
  */
-public interface AsyncExecutorService {
+public interface ThreadFactorySupplier {
 
-    void submit(Runnable task) throws TaskRejectedException;
+    ThreadFactory threadFactory();
 
-    <INPUT> void submit(INPUT input, Consumer<INPUT> task) throws TaskRejectedException;
+    ForkJoinWorkerThreadFactory forkJoinWorkerThreadFactory();
 
 }

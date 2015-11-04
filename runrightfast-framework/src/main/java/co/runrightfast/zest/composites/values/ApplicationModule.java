@@ -13,18 +13,22 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.commons.concurrent;
+package co.runrightfast.zest.composites.values;
 
-import co.runrightfast.zest.composites.services.concurrent.CompletableFutureExecutorService;
-import org.qi4j.api.service.ServiceActivation;
-import org.qi4j.api.service.ServiceComposite;
+import org.qi4j.api.property.Property;
 
 /**
  *
  * @author alfio
  */
-public interface CompletableFutureExecutorServiceComposite extends
-        CompletableFutureExecutorService,
-        ServiceComposite,
-        ServiceActivation {
+public interface ApplicationModule {
+
+    Property<String> applicationName();
+
+    Property<String> applicationVersion();
+
+    Property<String> layerName();
+
+    Property<String> moduleName();
+
 }

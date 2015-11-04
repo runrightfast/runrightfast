@@ -13,18 +13,20 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.commons.concurrent;
+package co.runrightfast.zest.concurrent;
 
-import co.runrightfast.zest.composites.services.concurrent.CompletableFutureExecutorService;
-import org.qi4j.api.service.ServiceActivation;
-import org.qi4j.api.service.ServiceComposite;
+import java.util.concurrent.TimeUnit;
+import org.qi4j.api.property.Property;
+import org.qi4j.library.constraints.annotation.GreaterThan;
 
 /**
  *
  * @author alfio
  */
-public interface CompletableFutureExecutorServiceComposite extends
-        CompletableFutureExecutorService,
-        ServiceComposite,
-        ServiceActivation {
+public interface DurationTime {
+
+    @GreaterThan(0)
+    Property<Integer> time();
+
+    Property<TimeUnit> timeUnit();
 }
