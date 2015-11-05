@@ -13,24 +13,19 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.composites.services.concurrent.config;
+package co.runrightfast.zest.composites.services.concurrent;
 
-import org.qi4j.api.common.Optional;
-import org.qi4j.api.configuration.ConfigurationComposite;
-import org.qi4j.api.property.Property;
-import org.qi4j.library.constraints.annotation.Range;
+import co.runrightfast.zest.composites.values.ApplicationModule;
+import co.runrightfast.zest.fragments.mixins.concurrent.ThreadGroupServiceMixin;
+import org.qi4j.api.mixin.Mixins;
 
 /**
  *
  * @author alfio
  */
-public interface ThreadFactoryConfig extends ConfigurationComposite {
+@Mixins(ThreadGroupServiceMixin.class)
+public interface ThreadGroupService {
 
-    @Optional
-    Property<Boolean> daemon();
-
-    @Optional
-    @Range(min = Thread.MIN_PRIORITY, max = Thread.MAX_PRIORITY)
-    Property<Integer> threadPriority();
+    ThreadGroup getThreadGroup(ApplicationModule applicationModule);
 
 }

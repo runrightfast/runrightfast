@@ -15,7 +15,7 @@
  */
 package co.runrightfast.zest.fragments.mixins.concurrent;
 
-import co.runrightfast.zest.composites.services.concurrent.ExecutorSupplier;
+import co.runrightfast.zest.composites.services.concurrent.ExecutorProvider;
 import co.runrightfast.zest.composites.services.concurrent.config.ForkJoinPoolConfig;
 import static com.google.common.base.Preconditions.checkState;
 import java.util.concurrent.Executor;
@@ -30,7 +30,7 @@ import org.qi4j.api.service.ServiceActivation;
  * @author alfio
  */
 @Log
-public class ForkJoinPoolExecutorSupplierMixin implements ExecutorSupplier, ServiceActivation {
+public class ForkJoinPoolExecutorSupplierMixin implements ExecutorProvider, ServiceActivation {
 
     private ExecutorService executorService;
 

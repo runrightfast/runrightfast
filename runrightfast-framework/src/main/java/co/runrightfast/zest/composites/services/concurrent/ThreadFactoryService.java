@@ -15,14 +15,14 @@
  */
 package co.runrightfast.zest.composites.services.concurrent;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
+import java.util.concurrent.ThreadFactory;
 
 /**
+ * Supplies thread factories for the current module.
  *
  * @author alfio
  */
-@FunctionalInterface
-public interface ExecutorSupplier {
+public interface ThreadFactoryService extends ThreadFactory, ForkJoinWorkerThreadFactory {
 
-    Executor executor();
 }
