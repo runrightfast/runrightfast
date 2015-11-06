@@ -33,6 +33,21 @@ import org.qi4j.api.structure.Module;
 
 /**
  *
+ * TODO: collect metrics - per thread group
+ * <pre>
+ *  - counters
+ *      - how many threads have been created
+ *      - how many uncaught exceptions - per exception type
+ *  - gauge - how many threads are running
+ *  - gauge - the last time a thread was created
+ *  - gauge - the last time a thread started running
+ *  - meter - how often are thread run() methods called
+ *  - meter - how often are uncaught exceptions occurring
+ *  - timer - how long are the run() methods running
+ * </pre>
+ *
+ * TODO: add tracing for when a thread is created, when it starts running, and when it is done
+ *
  * @author alfio
  */
 @Log
@@ -68,11 +83,11 @@ public class ThreadFactoryMixin implements ThreadFactoryService {
 
     private void configure(final Thread t) {
         final ThreadFactoryConfig config = threadFactoryConfig.get();
-        if (config.daemon() != null) {
+        if (config.daemon().get() != null) {
             t.setDaemon(config.daemon().get());
         }
 
-        if (config.threadPriority() != null) {
+        if (config.threadPriority().get() != null) {
             t.setPriority(config.threadPriority().get());
         }
     }

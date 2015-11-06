@@ -15,6 +15,7 @@
  */
 package co.runrightfast.zest.composites.values;
 
+import static co.runrightfast.zest.assemblers.BaseModuleAssemblers.assembleApplicationModule;
 import static co.runrightfast.zest.composites.values.ApplicationModuleFactoryTest.AppLayer.DOMAIN;
 import static co.runrightfast.zest.composites.values.ApplicationModuleFactoryTest.AppLayer.INFRASTRUCTURE;
 import static co.runrightfast.zest.composites.values.ApplicationModuleFactoryTest.AppModule.APP_MODULE;
@@ -145,10 +146,7 @@ public class ApplicationModuleFactoryTest {
 
     private void createAppModule(final LayerAssembly layer) {
         final ModuleAssembly module = layer.module(APP_MODULE.name);
-        module.values(
-                ApplicationModule.class,
-                ApplicationModuleFactory.class
-        );
+        assembleApplicationModule(module);
     }
 
 }

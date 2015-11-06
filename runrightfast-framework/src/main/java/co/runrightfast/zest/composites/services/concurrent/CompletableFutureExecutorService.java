@@ -33,7 +33,7 @@ public interface CompletableFutureExecutorService {
         private Nothing() {
         }
 
-        public static Nothing NOTHING = new Nothing();
+        public static final Nothing NOTHING = new Nothing();
 
     }
 

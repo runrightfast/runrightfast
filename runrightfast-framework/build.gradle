@@ -16,7 +16,11 @@ dependencies {
     
     compile group:'org.qi4j.core', name:'org.qi4j.core.bootstrap'
     runtime group:'org.qi4j.core', name:'org.qi4j.core.runtime'    
+    
     compile group:'org.qi4j.library', name:'org.qi4j.library.constraints'
     compile group:'org.qi4j.library', name:'org.qi4j.library.metrics'
+    
     compile group:'org.qi4j.extension', name:'org.qi4j.extension.metrics-yammer'
+    compile group:'org.qi4j.extension', name:'org.qi4j.extension.entitystore-memory'
+    compile group:'org.qi4j.extension', name:'org.qi4j.extension.valueserialization-orgjson'
 }

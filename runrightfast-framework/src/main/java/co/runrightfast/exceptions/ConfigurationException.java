@@ -19,7 +19,7 @@ package co.runrightfast.exceptions;
  *
  * @author alfio
  */
-public class ConfigurationException extends MajorException {
+public class ConfigurationException extends CriticalException {
 
     private static final long serialVersionUID = 1L;
 

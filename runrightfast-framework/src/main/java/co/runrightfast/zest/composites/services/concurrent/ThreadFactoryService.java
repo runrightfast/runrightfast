@@ -15,14 +15,17 @@
  */
 package co.runrightfast.zest.composites.services.concurrent;
 
+import co.runrightfast.zest.fragments.mixins.concurrent.ThreadFactoryMixin;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.ThreadFactory;
+import org.qi4j.api.mixin.Mixins;
 
 /**
  * Supplies thread factories for the current module.
  *
  * @author alfio
  */
+@Mixins(ThreadFactoryMixin.class)
 public interface ThreadFactoryService extends ThreadFactory, ForkJoinWorkerThreadFactory {
 
 }

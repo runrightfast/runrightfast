@@ -196,6 +196,7 @@ dependencyManagement {
             entry 'org.qi4j.extension.indexing-elasticsearch'
             entry 'org.qi4j.extension.entitystore-file'
             entry 'org.qi4j.extension.metrics-yammer'
+            entry 'org.qi4j.extension.valueserialization-orgjson'
         }
         
         dependencySet(group:'org.qi4j.library', version: "${ZEST_VERSION}") {
