@@ -13,28 +13,27 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.composites.services.concurrent.config;
+package co.runrightfast.zest.composites.services.json;
 
-import org.qi4j.api.common.UseDefaults;
-import org.qi4j.api.configuration.ConfigurationComposite;
-import org.qi4j.api.property.Property;
-import org.qi4j.library.constraints.annotation.GreaterThan;
-import org.qi4j.library.constraints.annotation.NotEmpty;
+import com.google.gson.Gson;
 
 /**
  *
  * @author alfio
  */
-public interface ForkJoinPoolConfig extends ConfigurationComposite {
+public interface GsonProvider {
 
-    @NotEmpty
-    Property<ThreadFactoryConfig> threadFactoryConfig();
+    Gson gson();
 
-    @UseDefaults
-    @GreaterThan(0)
-    Property<Integer> parallelism();
+    static class DefaultGsonProviderMixin implements GsonProvider {
 
-    @UseDefaults
-    Property<Boolean> asyncMode();
+        private final Gson gson = new Gson();
+
+        @Override
+        public Gson gson() {
+            return gson;
+        }
+
+    }
 
 }

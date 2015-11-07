@@ -16,7 +16,7 @@
 package co.runrightfast.zest.composites.services.concurrent;
 
 import co.runrightfast.exceptions.ConfigurationException;
-import co.runrightfast.zest.assemblers.ApplicationScopeAssemblers;
+import co.runrightfast.zest.assemblers.ApplicationCoreAssemblers;
 import co.runrightfast.zest.assemblers.BaseModuleAssemblers;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadFactoryServiceTest.AppLayer.DOMAIN;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadFactoryServiceTest.AppLayer.INFRASTRUCTURE;
@@ -178,9 +178,8 @@ public class ThreadFactoryServiceTest {
     }
 
     private void assembleCoreModule(final LayerAssembly layer, final AppModule appModule) {
-        BaseModuleAssemblers.composeAssemblerWithBaseAssemblers(
-                ApplicationScopeAssemblers::assembleThreadGroupService,
-                ApplicationScopeAssemblers::assembleOrgJsonValueSerialization,
+        BaseModuleAssemblers.composeAssemblerWithBaseAssemblers(ApplicationCoreAssemblers::assembleThreadGroupService,
+                ApplicationCoreAssemblers::assembleJsonValueSerialization,
                 module -> {
                     final MemoryEntityStoreAssembler memoryEntityStoreAssembler = new MemoryEntityStoreAssembler();
                     memoryEntityStoreAssembler.visibleIn(Visibility.application);

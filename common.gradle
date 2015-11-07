@@ -44,11 +44,13 @@ targetCompatibility = '1.8'
 repositories {
     mavenLocal();
     mavenCentral();
-    jcenter();    
+    jcenter();
+    maven { url 'http://repo.spring.io/libs-release' }
 }
 
 ext {
     ZEST_VERSION = '2.1'
+    REACTOR_VERSION = '2.0.6.RELEASE'
 }
 
 dependencyManagement {
@@ -216,6 +218,19 @@ dependencyManagement {
         dependency 'org.pegdown:pegdown:1.6.0'
         
         dependency 'joda-time:joda-time:2.9'
+        
+        dependencySet(group:'io.projectreactor', version: "${REACTOR_VERSION}") {
+            entry 'reactor-core'
+            entry 'reactor-stream'
+            entry 'reactor-bus'
+            entry 'reactor-net'
+            entry 'reactor-alloc'
+            entry 'reactor-logback'
+            entry 'reactor-groovy'
+            entry 'reactor-groovy-extensions'
+        }
+        
+        dependency 'io.netty:netty-all:4.0.33.Final'
      }
 }
 

@@ -16,8 +16,9 @@
 package co.runrightfast.zest.assemblers;
 
 import java.util.function.Function;
+import lombok.NonNull;
+import org.apache.commons.lang3.ArrayUtils;
 import static org.apache.commons.lang3.Validate.noNullElements;
-import static org.apache.commons.lang3.Validate.notEmpty;
 import org.qi4j.bootstrap.ModuleAssembly;
 
 /**
@@ -26,18 +27,24 @@ import org.qi4j.bootstrap.ModuleAssembly;
  */
 public interface ModuleAssembler {
 
-    static Function<ModuleAssembly, ModuleAssembly> composeAssembler(final Function<ModuleAssembly, ModuleAssembly>... assemblers) {
-        notEmpty(assemblers);
-        noNullElements(assemblers);
-        if (assemblers.length == 1) {
-            return assemblers[0];
+    static Function<ModuleAssembly, ModuleAssembly> composeAssembler(
+            @NonNull final Function<ModuleAssembly, ModuleAssembly> assembler1,
+            @NonNull final Function<ModuleAssembly, ModuleAssembly> assembler2,
+            final Function<ModuleAssembly, ModuleAssembly>... moreAssemblers) {
+        if (ArrayUtils.isNotEmpty(moreAssemblers)) {
+            noNullElements(moreAssemblers);
+
+            Function<ModuleAssembly, ModuleAssembly> chain = assembler1.andThen(assembler2);
+
+            for (final Function<ModuleAssembly, ModuleAssembly> assembler : moreAssemblers) {
+                chain = chain.andThen(assembler);
+            }
+            return chain;
+
+        } else {
+            return assembler1.andThen(assembler2);
         }
 
-        Function<ModuleAssembly, ModuleAssembly> chain = assemblers[0];
-        for (int i = 1; i < assemblers.length; i++) {
-            chain = chain.andThen(assemblers[i]);
-        }
-        return chain;
     }
 
 }

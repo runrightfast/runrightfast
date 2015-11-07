@@ -33,11 +33,7 @@ import org.qi4j.bootstrap.ModuleAssembly;
 public interface BaseModuleAssemblers {
 
     /**
-     * Base composeAssembler functions :
-     * <ol>
-     * <li>{@link #assembleApplicationModule(org.qi4j.bootstrap.ModuleAssembly) }
-     * <li>{@link #assempleThreadFactoryService(org.qi4j.bootstrap.ModuleAssembly) }
-     * </ol>
+     * builds upon {@link #baseAssemblers() }, chaining on the provided assemblers
      *
      * @param assemblers composeAssembler chain - required
      * @return composed module composeAssembler function
@@ -60,12 +56,13 @@ public interface BaseModuleAssemblers {
      * <li>{@link #assempleThreadFactoryService(org.qi4j.bootstrap.ModuleAssembly) }
      * </ol>
      *
-     * @return composed module composeAssembler function
+     * @return function for composing modules
      */
     static Function<ModuleAssembly, ModuleAssembly> baseAssemblers() {
-        Function<ModuleAssembly, ModuleAssembly> chain = BaseModuleAssemblers::assembleApplicationModule;
-        chain = chain.andThen(BaseModuleAssemblers::assempleThreadFactoryService);
-        return chain;
+        return ModuleAssembler.composeAssembler(
+                BaseModuleAssemblers::assembleApplicationModule,
+                BaseModuleAssemblers::assempleThreadFactoryService
+        );
     }
 
     /**

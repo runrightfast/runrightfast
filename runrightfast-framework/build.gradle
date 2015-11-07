@@ -23,4 +23,11 @@ dependencies {
     compile group:'org.qi4j.extension', name:'org.qi4j.extension.metrics-yammer'
     compile group:'org.qi4j.extension', name:'org.qi4j.extension.entitystore-memory'
     compile group:'org.qi4j.extension', name:'org.qi4j.extension.valueserialization-orgjson'
+    
+    compile group:'io.projectreactor', name:'reactor-core'
+    compile group:'io.projectreactor', name:'reactor-stream'
+    compile group:'io.projectreactor', name:'reactor-bus'
+    compile group:'io.projectreactor', name:'reactor-net'
+    
+    compile group:'io.netty', name:'netty-all'
 }

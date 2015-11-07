@@ -15,7 +15,7 @@
  */
 package co.runrightfast.zest.composites.values;
 
-import co.runrightfast.zest.composites.values.ApplicationModuleFactory.ApplicationModuleSupplierMixin;
+import co.runrightfast.zest.composites.values.ApplicationModuleFactory.ApplicationModuleFactoryMixin;
 import org.qi4j.api.injection.scope.Structure;
 import org.qi4j.api.mixin.Mixins;
 import org.qi4j.api.structure.Application;
@@ -27,16 +27,16 @@ import org.qi4j.api.value.ValueBuilder;
  *
  * @author alfio
  */
-@Mixins({ApplicationModuleSupplierMixin.class})
+@Mixins({ApplicationModuleFactoryMixin.class})
 public interface ApplicationModuleFactory {
 
     ApplicationModule applicationModule();
 
-    public static class ApplicationModuleSupplierMixin implements ApplicationModuleFactory {
+    public static class ApplicationModuleFactoryMixin implements ApplicationModuleFactory {
 
         private final ApplicationModule applicationModule;
 
-        public ApplicationModuleSupplierMixin(@Structure final Application app, @Structure final Layer layer, @Structure final Module module) {
+        public ApplicationModuleFactoryMixin(@Structure final Application app, @Structure final Layer layer, @Structure final Module module) {
             final ValueBuilder<ApplicationModule> builder = module.newValueBuilder(ApplicationModule.class);
             final ApplicationModule prototype = builder.prototypeFor(ApplicationModule.class);
             prototype.applicationName().set(app.name());
