@@ -70,6 +70,12 @@ public class EnvironmentProviderTest extends AbstractQi4jTest {
 
         logDispatchers(env, DISPATCHER_GROUP, MPSC, SHARED, THREAD_POOL, WORK_QUEUE);
         logAllDispatchers(env);
+
+        testDispatching("default", env.getDefaultDispatcher());
+
+        for (int i = 1; i <= 16; i++) {
+            testDispatching("cached:" + i, env.getCachedDispatcher());
+        }
     }
 
     private void logAllDispatchers(final Environment env) {
@@ -86,13 +92,19 @@ public class EnvironmentProviderTest extends AbstractQi4jTest {
                 .consume(
                         name -> {
                             try {
-                                log(name, env.getDispatcher(name));
+                                final Dispatcher dispatcher = env.getDispatcher(name);
+                                log(name, dispatcher);
+                                testDispatching(name, dispatcher);
                             } catch (final IllegalArgumentException e) {
-                                log.logp(Level.SEVERE, getClass().getName(), "testEnvironment", name, e);
+                                // thrown if the dispatcher is not registered with the environment
+                                log.logp(Level.SEVERE, getClass().getName(), "logDispatchers", name, e);
+                            } catch (final Exception e) {
+                                log.logp(Level.SEVERE, getClass().getName(), "logDispatchers", name, e);
                             }
+
                         },
                         exception -> {
-                            log.logp(Level.SEVERE, getClass().getName(), "testEnvironment", "failed to log dispatcher info", exception);
+                            log.logp(Level.SEVERE, getClass().getName(), "logDispatchers", "failed to log dispatcher info", exception);
                             latch.countDown();
                         },
                         v -> {
@@ -131,6 +143,29 @@ public class EnvironmentProviderTest extends AbstractQi4jTest {
         json.addProperty("inContext", dispatcher.inContext());
         json.addProperty("supportsOrdering", dispatcher.supportsOrdering());
         return json;
+    }
+
+    private void testDispatching(final String name, final Dispatcher dispatcher) throws InterruptedException {
+        int taskCount = 2;
+        final CountDownLatch latch = new CountDownLatch(taskCount);
+        final long sleepTime = 100L;
+        Streams
+                .range(1, 2)
+                .dispatchOn(dispatcher)
+                .consume(id -> {
+                    log.info(String.format("%s: %s: RECEIVED MESSAGE : %d", name, Thread.currentThread().getName(), id));
+                    log(name, dispatcher);
+                    try {
+                        Thread.sleep(sleepTime);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                    log.info(String.format("%s: %s: PROCESSED MESSAGE : %d", name, Thread.currentThread().getName(), id));
+                    latch.countDown();
+                });
+
+        latch.await();
+
     }
 
 }
