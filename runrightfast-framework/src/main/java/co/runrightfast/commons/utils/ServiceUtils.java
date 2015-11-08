@@ -23,22 +23,18 @@ import static com.google.common.util.concurrent.Service.State.NEW;
 import static com.google.common.util.concurrent.Service.State.RUNNING;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
 import lombok.NonNull;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author alfio
  */
-@Log
+@Slf4j
 public final class ServiceUtils {
 
     private ServiceUtils() {
     }
-
-    private static final String CLAZZ = ServiceUtils.class.getName();
 
     public static void start(@NonNull final Service service) {
         switch (service.state()) {
@@ -76,9 +72,7 @@ public final class ServiceUtils {
                 case NEW:
                 case FAILED:
                 case TERMINATED:
-                    log.logp(FINE, CLAZZ, "stop",
-                            () -> String.format("Service (%s) is not running: %s", service.getClass().getName(), service.state())
-                    );
+                    log.debug("Service ({}) is not running: {}", service.getClass().getName(), service.state());
             }
         }
     }
@@ -95,10 +89,7 @@ public final class ServiceUtils {
                 case NEW:
                 case FAILED:
                 case TERMINATED:
-                    log.logp(FINE, CLAZZ, "stopAsync",
-                            () -> String.format("Service (%s) is not running: %s", service.getClass().getName(), service.state())
-                    );
-
+                    log.debug("Service ({}) is not running: {}", service.getClass().getName(), service.state());
             }
         }
     }
@@ -115,9 +106,9 @@ public final class ServiceUtils {
                 return;
             } catch (final TimeoutException ex) {
                 final int elapsedTimeSeconds = i * 10;
-                log.logp(WARNING, CLAZZ, "awaitTerminated",
-                        new ApplicationException(MAJOR, ex),
-                        () -> String.format("Wating for service to terminate : %s : %d seconds", service.getClass().getName(), elapsedTimeSeconds)
+                log.warn(
+                        String.format("Wating for service to terminate : %s : %d seconds", service.getClass().getName(), elapsedTimeSeconds),
+                        new ApplicationException(MAJOR, ex)
                 );
             }
         }
@@ -135,9 +126,9 @@ public final class ServiceUtils {
                 return;
             } catch (final TimeoutException ex) {
                 final int elapsedTimeSeconds = i * 10;
-                log.logp(WARNING, CLAZZ, "awaitRunning",
-                        new ApplicationException(MAJOR, ex),
-                        () -> String.format("Wating for service to start : %s : %d seconds", service.getClass().getName(), elapsedTimeSeconds)
+                log.warn(
+                        String.format("Wating for service to start : %s : %d seconds", service.getClass().getName(), elapsedTimeSeconds),
+                        new ApplicationException(MAJOR, ex)
                 );
             }
         }

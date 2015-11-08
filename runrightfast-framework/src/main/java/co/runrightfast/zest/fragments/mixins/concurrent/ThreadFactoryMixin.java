@@ -24,7 +24,6 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
-import lombok.extern.java.Log;
 import org.qi4j.api.configuration.Configuration;
 import org.qi4j.api.injection.scope.Service;
 import org.qi4j.api.injection.scope.Structure;
@@ -50,7 +49,6 @@ import org.qi4j.api.structure.Module;
  *
  * @author alfio
  */
-@Log
 public class ThreadFactoryMixin implements ThreadFactoryService {
 
     private final ApplicationModule applicationModule;

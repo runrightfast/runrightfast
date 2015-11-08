@@ -13,20 +13,17 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.concurrent;
+package co.runrightfast.zest.composites.services.concurrent.reactor;
 
-import java.util.concurrent.TimeUnit;
-import org.qi4j.api.property.Property;
-import org.qi4j.library.constraints.annotation.GreaterThan;
+import org.qi4j.api.service.ServiceActivation;
+import reactor.Environment;
 
 /**
  *
  * @author alfio
  */
-public interface DurationTime {
+public interface ReactorEnvironmentProvider extends ServiceActivation {
 
-    @GreaterThan(0)
-    Property<Integer> time();
+    Environment environment();
 
-    Property<TimeUnit> timeUnit();
 }

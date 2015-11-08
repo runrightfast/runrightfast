@@ -15,8 +15,6 @@
  */
 package co.runrightfast.zest.assemblers;
 
-import co.runrightfast.zest.composites.services.concurrent.ThreadFactoryService;
-import co.runrightfast.zest.composites.services.concurrent.config.ThreadFactoryConfig;
 import co.runrightfast.zest.composites.values.ApplicationModule;
 import co.runrightfast.zest.composites.values.ApplicationModuleFactory;
 import java.util.function.Function;
@@ -53,7 +51,7 @@ public interface BaseModuleAssemblers {
      * Base assembler functions include :
      * <ol>
      * <li>{@link #assembleApplicationModule(org.qi4j.bootstrap.ModuleAssembly) }
-     * <li>{@link #assempleThreadFactoryService(org.qi4j.bootstrap.ModuleAssembly) }
+     * <li>{@link ConcurrentAssemblers#assempleThreadFactoryService(org.qi4j.bootstrap.ModuleAssembly) }
      * </ol>
      *
      * @return function for composing modules
@@ -61,7 +59,7 @@ public interface BaseModuleAssemblers {
     static Function<ModuleAssembly, ModuleAssembly> baseAssemblers() {
         return ModuleAssembler.composeAssembler(
                 BaseModuleAssemblers::assembleApplicationModule,
-                BaseModuleAssemblers::assempleThreadFactoryService
+                ConcurrentAssemblers::assempleThreadFactoryService
         );
     }
 
@@ -74,7 +72,7 @@ public interface BaseModuleAssemblers {
      *
      * Every module is expected to include these.
      *
-     * @param module
+     * @param module ModuleAssembly
      * @return ModuleAssembly
      */
     static ModuleAssembly assembleApplicationModule(@NonNull final ModuleAssembly module) {
@@ -86,9 +84,4 @@ public interface BaseModuleAssemblers {
         return module;
     }
 
-    static ModuleAssembly assempleThreadFactoryService(@NonNull final ModuleAssembly module) {
-        module.services(ThreadFactoryService.class);
-        module.entities(ThreadFactoryConfig.class);
-        return module;
-    }
 }

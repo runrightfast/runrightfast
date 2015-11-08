@@ -15,7 +15,6 @@
  */
 package co.runrightfast.zest.assemblers;
 
-import co.runrightfast.zest.composites.services.concurrent.ThreadGroupService;
 import co.runrightfast.zest.composites.services.json.GsonProvider;
 import co.runrightfast.zest.fragments.mixins.json.GsonValueSerialization;
 import java.util.function.Function;
@@ -52,35 +51,20 @@ public interface ApplicationCoreAssemblers {
     /**
      * Base assembler functions include :
      * <ol>
-     * <li>{@link #assembleThreadGroupService(org.qi4j.bootstrap.ModuleAssembly) }
      * <li>{@link #assembleJsonValueSerialization(org.qi4j.bootstrap.ModuleAssembly) }
-     * <li>{@link  #assembleDefaultGsonProvider(org.qi4j.bootstrap.ModuleAssembly) }
+     * <li>{@link #assembleDefaultGsonProvider(org.qi4j.bootstrap.ModuleAssembly) }
+     * <li>{@link ConcurrentAssemblers#assembleThreadGroupService(org.qi4j.bootstrap.ModuleAssembly) }
+     * <li>{@link ReactorAssemblers#assembleDefaultReactorEnvironment(org.qi4j.bootstrap.ModuleAssembly) }
      * </ol>
      *
      * @return function for composing modules
      */
     static Function<ModuleAssembly, ModuleAssembly> coreAssemblers() {
-        return ModuleAssembler.composeAssembler(
-                ApplicationCoreAssemblers::assembleThreadGroupService,
-                ApplicationCoreAssemblers::assembleDefaultGsonProvider,
-                ApplicationCoreAssemblers::assembleJsonValueSerialization
+        return ModuleAssembler.composeAssembler(ApplicationCoreAssemblers::assembleDefaultGsonProvider,
+                ApplicationCoreAssemblers::assembleJsonValueSerialization,
+                ConcurrentAssemblers::assembleThreadGroupService,
+                ReactorAssemblers::assembleDefaultReactorEnvironment
         );
-    }
-
-    /**
-     * Adds the following service composites to the module with application scope visibility:
-     * <ol>
-     * <li>{@link ThreadGroupService}
-     * </ol>
-     *
-     * Should be created as a singleton within a runtime layer that is visible by all other layers in the application.
-     *
-     * @param module
-     * @return ModuleAssembly
-     */
-    static ModuleAssembly assembleThreadGroupService(@NonNull final ModuleAssembly module) {
-        module.services(ThreadGroupService.class).visibleIn(Visibility.application);
-        return module;
     }
 
     static ModuleAssembly assembleJsonValueSerialization(@NonNull final ModuleAssembly module) {

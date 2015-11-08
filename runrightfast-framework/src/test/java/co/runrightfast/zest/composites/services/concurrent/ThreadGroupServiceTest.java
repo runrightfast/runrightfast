@@ -15,9 +15,9 @@
  */
 package co.runrightfast.zest.composites.services.concurrent;
 
-import co.runrightfast.zest.assemblers.ApplicationCoreAssemblers;
 import co.runrightfast.zest.assemblers.BaseModuleAssemblers;
 import static co.runrightfast.zest.assemblers.BaseModuleAssemblers.assembleApplicationModule;
+import co.runrightfast.zest.assemblers.ConcurrentAssemblers;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadGroupServiceTest.AppLayer.DOMAIN;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadGroupServiceTest.AppLayer.INFRASTRUCTURE;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadGroupServiceTest.AppModule.CORE;
@@ -161,8 +161,8 @@ public class ThreadGroupServiceTest {
     }
 
     private void assembleCoreModule(final LayerAssembly layer, final AppModule appModule) {
-        BaseModuleAssemblers.composeAssemblerWithBaseAssemblers(ApplicationCoreAssemblers::assembleThreadGroupService
-        ).apply(layer.module(appModule.name));
+        BaseModuleAssemblers.composeAssemblerWithBaseAssemblers(ConcurrentAssemblers::assembleThreadGroupService)
+                .apply(layer.module(appModule.name));
     }
 
 }

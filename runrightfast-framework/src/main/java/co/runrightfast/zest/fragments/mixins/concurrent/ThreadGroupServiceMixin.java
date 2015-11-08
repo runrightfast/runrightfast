@@ -25,7 +25,7 @@ import org.qi4j.api.structure.Application;
 
 /**
  *
- * TODO: add ability to plugin an Thread.UncaughtExceptionHandler - subclass ThreadGroup to provide alternative handling of uncaught exceptions.
+ * TODO: add ability to plug in a Thread.UncaughtExceptionHandler - subclass ThreadGroup to provide alternative handling of uncaught exceptions.
  *
  * @author alfio
  */

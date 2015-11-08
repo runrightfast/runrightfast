@@ -7,4 +7,6 @@ dependencies {
     
     compile group: 'io.dropwizard.metrics', name: 'metrics-core'   
     compile group: 'io.dropwizard.metrics', name:'metrics-healthchecks'
+    
+    compile group: 'com.lmax', name: 'disruptor'
 }

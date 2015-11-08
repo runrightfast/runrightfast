@@ -26,6 +26,11 @@ import org.qi4j.api.mixin.Mixins;
 @Mixins(ThreadGroupServiceMixin.class)
 public interface ThreadGroupService {
 
+    /**
+     *
+     * @param applicationModule app module
+     * @return ThreadGroup that is assigned to the module
+     */
     ThreadGroup getThreadGroup(ApplicationModule applicationModule);
 
 }
