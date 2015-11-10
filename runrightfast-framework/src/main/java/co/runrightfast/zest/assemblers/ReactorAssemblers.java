@@ -27,6 +27,7 @@ import co.runrightfast.zest.fragments.mixins.concurrent.reactor.ModuleRingBuffer
 import co.runrightfast.zest.fragments.mixins.concurrent.reactor.ModuleWorkQueueDispatcherProviderMixin;
 import lombok.NonNull;
 import org.qi4j.api.common.Visibility;
+import org.qi4j.api.service.ServiceActivation;
 import org.qi4j.bootstrap.ModuleAssembly;
 
 /**
@@ -38,6 +39,7 @@ public interface ReactorAssemblers {
     static ModuleAssembly assembleDefaultReactorEnvironment(@NonNull final ModuleAssembly module) {
         module.services(ReactorEnvironment.class)
                 .withMixins(DefaultReactorEnvironmentMixin.class)
+                .withTypes(ServiceActivation.class)
                 .visibleIn(Visibility.application)
                 .instantiateOnStartup();
 
@@ -63,6 +65,7 @@ public interface ReactorAssemblers {
         final String serviceName = String.format("%s-%s-%s", RingBufferDispatcherProvider.class.getSimpleName(), module.layer().name(), module.name());
         module.services(RingBufferDispatcherProvider.class)
                 .withMixins(ModuleRingBufferDispatcherProviderMixin.class)
+                .withTypes(ServiceActivation.class)
                 .identifiedBy(serviceName);
         module.entities(RingBufferDispatcherConfig.class);
         return module;
@@ -79,6 +82,7 @@ public interface ReactorAssemblers {
         final String serviceName = String.format("%s-%s-%s", WorkQueueDispatcherProvider.class.getSimpleName(), module.layer().name(), module.name());
         module.services(WorkQueueDispatcherProvider.class)
                 .withMixins(ModuleWorkQueueDispatcherProviderMixin.class)
+                .withTypes(ServiceActivation.class)
                 .identifiedBy(serviceName);
         module.entities(WorkQueueDispatcherConfig.class);
         return module;

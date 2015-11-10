@@ -23,6 +23,7 @@ import co.runrightfast.zest.composites.services.concurrent.reactor.config.RingBu
 import org.qi4j.api.configuration.Configuration;
 import org.qi4j.api.injection.scope.Service;
 import org.qi4j.api.injection.scope.This;
+import org.qi4j.api.service.ServiceActivation;
 import reactor.Environment;
 import reactor.core.Dispatcher;
 
@@ -31,7 +32,7 @@ import reactor.core.Dispatcher;
  *
  * @author alfio
  */
-public class ModuleRingBufferDispatcherProviderMixin implements RingBufferDispatcherProvider {
+public class ModuleRingBufferDispatcherProviderMixin implements RingBufferDispatcherProvider, ServiceActivation {
 
     @Service
     private ReactorEnvironment env;

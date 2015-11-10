@@ -15,14 +15,13 @@
  */
 package co.runrightfast.zest.composites.services.concurrent.reactor;
 
-import org.qi4j.api.service.ServiceActivation;
 import reactor.Environment;
 
 /**
  *
  * @author alfio
  */
-public interface ReactorEnvironment extends ServiceActivation {
+public interface ReactorEnvironment {
 
     Environment environment();
 

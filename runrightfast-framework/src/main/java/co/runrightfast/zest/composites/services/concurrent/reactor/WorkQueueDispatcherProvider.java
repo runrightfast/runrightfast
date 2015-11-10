@@ -15,14 +15,13 @@
  */
 package co.runrightfast.zest.composites.services.concurrent.reactor;
 
-import org.qi4j.api.service.ServiceActivation;
 import reactor.core.Dispatcher;
 
 /**
  *
  * @author alfio
  */
-public interface WorkQueueDispatcherProvider extends ServiceActivation {
+public interface WorkQueueDispatcherProvider {
 
     Dispatcher workQueueDispatcher();
 }

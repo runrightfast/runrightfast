@@ -15,14 +15,13 @@
  */
 package co.runrightfast.zest.composites.services.concurrent.reactor;
 
-import org.qi4j.api.service.ServiceActivation;
 import reactor.core.Dispatcher;
 
 /**
  *
  * @author alfio
  */
-public interface RingBufferDispatcherProvider extends ServiceActivation {
+public interface RingBufferDispatcherProvider {
 
     Dispatcher ringBufferDispatcher();
 }

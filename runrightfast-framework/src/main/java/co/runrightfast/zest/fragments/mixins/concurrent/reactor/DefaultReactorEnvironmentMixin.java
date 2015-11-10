@@ -17,6 +17,7 @@ package co.runrightfast.zest.fragments.mixins.concurrent.reactor;
 
 import co.runrightfast.zest.composites.services.concurrent.reactor.ReactorEnvironment;
 import lombok.extern.slf4j.Slf4j;
+import org.qi4j.api.service.ServiceActivation;
 import reactor.Environment;
 
 /**
@@ -24,7 +25,7 @@ import reactor.Environment;
  * @author alfio
  */
 @Slf4j
-public class DefaultReactorEnvironmentMixin implements ReactorEnvironment {
+public class DefaultReactorEnvironmentMixin implements ReactorEnvironment, ServiceActivation {
 
     private Environment environment;
 
