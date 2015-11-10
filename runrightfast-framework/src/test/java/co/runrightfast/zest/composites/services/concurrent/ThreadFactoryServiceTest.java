@@ -19,13 +19,14 @@ import co.runrightfast.exceptions.ConfigurationException;
 import co.runrightfast.zest.assemblers.ApplicationCoreAssemblers;
 import co.runrightfast.zest.assemblers.BaseModuleAssemblers;
 import co.runrightfast.zest.assemblers.ConcurrentAssemblers;
+import co.runrightfast.zest.assemblers.ModuleAssembler;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadFactoryServiceTest.AppLayer.DOMAIN;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadFactoryServiceTest.AppLayer.INFRASTRUCTURE;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadFactoryServiceTest.AppModule.CORE;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadFactoryServiceTest.AppModule.MODULE_1;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadFactoryServiceTest.AppModule.MODULE_2;
-import co.runrightfast.zest.composites.values.ApplicationModule;
-import co.runrightfast.zest.composites.values.ApplicationModuleFactory;
+import co.runrightfast.zest.composites.services.ApplicationModule;
+import co.runrightfast.zest.composites.services.ApplicationModuleFactory;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.logging.Level;
@@ -146,7 +147,7 @@ public class ThreadFactoryServiceTest {
         assertThat(threadGroupServiceRef.isAvailable(), is(true));
         final ThreadGroupService service = threadGroupServiceRef.get();
 
-        final ApplicationModule moduleAppModule = module.newValue(ApplicationModuleFactory.class).applicationModule();
+        final ApplicationModule moduleAppModule = module.findService(ApplicationModuleFactory.class).get().applicationModule();
         final ThreadGroup module1ThreadGroup = service.getThreadGroup(moduleAppModule);
         log.info(String.format("module1ThreadGroup : %s", module1ThreadGroup.getName()));
         assertThat(module1ThreadGroup.getName(), is(String.format("/%s/%s/%s/%s", moduleAppModule.applicationName(), moduleAppModule.applicationVersion(), moduleAppModule.layerName(), moduleAppModule.moduleName())));
@@ -179,7 +180,10 @@ public class ThreadFactoryServiceTest {
     }
 
     private void assembleCoreModule(final LayerAssembly layer, final AppModule appModule) {
-        BaseModuleAssemblers.composeAssemblerWithBaseAssemblers(ConcurrentAssemblers::assembleThreadGroupService,
+        ModuleAssembler.composeAssembler(
+                BaseModuleAssemblers::assembleApplicationModule,
+                ConcurrentAssemblers::assembleThreadFactoryService,
+                ConcurrentAssemblers::assembleThreadGroupService,
                 ApplicationCoreAssemblers::assembleJsonValueSerialization,
                 module -> {
                     final MemoryEntityStoreAssembler memoryEntityStoreAssembler = new MemoryEntityStoreAssembler();

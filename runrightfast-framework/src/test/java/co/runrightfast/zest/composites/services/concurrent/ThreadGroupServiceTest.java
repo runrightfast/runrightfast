@@ -18,13 +18,14 @@ package co.runrightfast.zest.composites.services.concurrent;
 import co.runrightfast.zest.assemblers.BaseModuleAssemblers;
 import static co.runrightfast.zest.assemblers.BaseModuleAssemblers.assembleApplicationModule;
 import co.runrightfast.zest.assemblers.ConcurrentAssemblers;
+import co.runrightfast.zest.assemblers.ModuleAssembler;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadGroupServiceTest.AppLayer.DOMAIN;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadGroupServiceTest.AppLayer.INFRASTRUCTURE;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadGroupServiceTest.AppModule.CORE;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadGroupServiceTest.AppModule.MODULE_1;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadGroupServiceTest.AppModule.MODULE_2;
-import co.runrightfast.zest.composites.values.ApplicationModule;
-import co.runrightfast.zest.composites.values.ApplicationModuleFactory;
+import co.runrightfast.zest.composites.services.ApplicationModule;
+import co.runrightfast.zest.composites.services.ApplicationModuleFactory;
 import lombok.extern.java.Log;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -140,7 +141,7 @@ public class ThreadGroupServiceTest {
         assertThat(threadGroupServiceRef.isAvailable(), is(true));
         final ThreadGroupService service = threadGroupServiceRef.get();
 
-        final ApplicationModule moduleAppModule = module.newValue(ApplicationModuleFactory.class).applicationModule();
+        final ApplicationModule moduleAppModule = module.findService(ApplicationModuleFactory.class).get().applicationModule();
         final ThreadGroup module1ThreadGroup = service.getThreadGroup(moduleAppModule);
         log.info(String.format("module1ThreadGroup : %s", module1ThreadGroup.getName()));
         assertThat(module1ThreadGroup.getName(), is(String.format("/%s/%s/%s/%s", moduleAppModule.applicationName(), moduleAppModule.applicationVersion(), moduleAppModule.layerName(), moduleAppModule.moduleName())));
@@ -161,8 +162,10 @@ public class ThreadGroupServiceTest {
     }
 
     private void assembleCoreModule(final LayerAssembly layer, final AppModule appModule) {
-        BaseModuleAssemblers.composeAssemblerWithBaseAssemblers(ConcurrentAssemblers::assembleThreadGroupService)
-                .apply(layer.module(appModule.name));
+        ModuleAssembler.composeAssembler(
+                BaseModuleAssemblers::assembleApplicationModule,
+                ConcurrentAssemblers::assembleThreadGroupService
+        ).apply(layer.module(appModule.name));
     }
 
 }

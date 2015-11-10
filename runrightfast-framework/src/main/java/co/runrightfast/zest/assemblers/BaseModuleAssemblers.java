@@ -15,12 +15,10 @@
  */
 package co.runrightfast.zest.assemblers;
 
-import co.runrightfast.zest.composites.values.ApplicationModule;
-import co.runrightfast.zest.composites.values.ApplicationModuleFactory;
+import co.runrightfast.zest.composites.services.ApplicationModule;
+import co.runrightfast.zest.composites.services.ApplicationModuleFactory;
 import java.util.function.Function;
 import lombok.NonNull;
-import static org.apache.commons.lang3.Validate.noNullElements;
-import static org.apache.commons.lang3.Validate.notEmpty;
 import org.qi4j.bootstrap.ModuleAssembly;
 
 /**
@@ -31,27 +29,10 @@ import org.qi4j.bootstrap.ModuleAssembly;
 public interface BaseModuleAssemblers {
 
     /**
-     * builds upon {@link #baseAssemblers() }, chaining on the provided assemblers
-     *
-     * @param assemblers composeAssembler chain - required
-     * @return composed module composeAssembler function
-     */
-    static Function<ModuleAssembly, ModuleAssembly> composeAssemblerWithBaseAssemblers(final Function<ModuleAssembly, ModuleAssembly>... assemblers) {
-        notEmpty(assemblers);
-        noNullElements(assemblers);
-
-        Function<ModuleAssembly, ModuleAssembly> chain = baseAssemblers();
-        for (final Function<ModuleAssembly, ModuleAssembly> assembler : assemblers) {
-            chain = chain.andThen(assembler);
-        }
-        return chain;
-    }
-
-    /**
      * Base assembler functions include :
      * <ol>
      * <li>{@link #assembleApplicationModule(org.qi4j.bootstrap.ModuleAssembly) }
-     * <li>{@link ConcurrentAssemblers#assempleThreadFactoryService(org.qi4j.bootstrap.ModuleAssembly) }
+     * <li>{@link ConcurrentAssemblers#assembleThreadFactoryService(org.qi4j.bootstrap.ModuleAssembly) }
      * </ol>
      *
      * @return function for composing modules
@@ -59,7 +40,7 @@ public interface BaseModuleAssemblers {
     static Function<ModuleAssembly, ModuleAssembly> baseAssemblers() {
         return ModuleAssembler.composeAssembler(
                 BaseModuleAssemblers::assembleApplicationModule,
-                ConcurrentAssemblers::assempleThreadFactoryService
+                ConcurrentAssemblers::assembleThreadFactoryService
         );
     }
 
@@ -77,9 +58,10 @@ public interface BaseModuleAssemblers {
      */
     static ModuleAssembly assembleApplicationModule(@NonNull final ModuleAssembly module) {
         module.values(
-                ApplicationModule.class,
-                ApplicationModuleFactory.class
+                ApplicationModule.class
         );
+
+        module.services(ApplicationModuleFactory.class);
 
         return module;
     }

@@ -15,6 +15,8 @@
  */
 package co.runrightfast.zest.composites.values;
 
+import co.runrightfast.zest.composites.services.ApplicationModuleFactory;
+import co.runrightfast.zest.composites.services.ApplicationModule;
 import static co.runrightfast.zest.assemblers.BaseModuleAssemblers.assembleApplicationModule;
 import static co.runrightfast.zest.composites.values.ApplicationModuleFactoryTest.AppLayer.DOMAIN;
 import static co.runrightfast.zest.composites.values.ApplicationModuleFactoryTest.AppLayer.INFRASTRUCTURE;
@@ -98,7 +100,7 @@ public class ApplicationModuleFactoryTest {
         app.activate();
 
         final Module module = app.findModule(INFRASTRUCTURE.name, APP_MODULE.name);
-        final ApplicationModuleFactory appModuleFactory = module.newValue(ApplicationModuleFactory.class);
+        final ApplicationModuleFactory appModuleFactory = module.findService(ApplicationModuleFactory.class).get();
         assertThat(appModuleFactory, is(notNullValue()));
 
         final ApplicationModule appModule = appModuleFactory.applicationModule();
@@ -123,14 +125,14 @@ public class ApplicationModuleFactoryTest {
 
         app.activate();
 
-        final ApplicationModule domainAppModule = app.findModule(DOMAIN.name, APP_MODULE.name).newValue(ApplicationModuleFactory.class).applicationModule();
+        final ApplicationModule domainAppModule = app.findModule(DOMAIN.name, APP_MODULE.name).findService(ApplicationModuleFactory.class).get().applicationModule();
         log.info(String.format("appModule : %s", domainAppModule));
         assertThat(domainAppModule.applicationName().get(), is(getClass().getSimpleName()));
         assertThat(domainAppModule.applicationVersion().get(), is(app.version()));
         assertThat(domainAppModule.layerName().get(), is(DOMAIN.name));
         assertThat(domainAppModule.moduleName().get(), is(APP_MODULE.name));
 
-        final ApplicationModule infrastructureAppModule = app.findModule(INFRASTRUCTURE.name, APP_MODULE.name).newValue(ApplicationModuleFactory.class).applicationModule();
+        final ApplicationModule infrastructureAppModule = app.findModule(INFRASTRUCTURE.name, APP_MODULE.name).findService(ApplicationModuleFactory.class).get().applicationModule();
         log.info(String.format("appModule : %s", infrastructureAppModule));
         assertThat(infrastructureAppModule.applicationName().get(), is(getClass().getSimpleName()));
         assertThat(infrastructureAppModule.applicationVersion().get(), is(app.version()));

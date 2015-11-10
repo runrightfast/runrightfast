@@ -16,7 +16,7 @@
 package co.runrightfast.zest.fragments.mixins.concurrent;
 
 import co.runrightfast.zest.composites.services.concurrent.ThreadGroupService;
-import co.runrightfast.zest.composites.values.ApplicationModule;
+import co.runrightfast.zest.composites.services.ApplicationModule;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.NonNull;
@@ -41,7 +41,7 @@ public class ThreadGroupServiceMixin implements ThreadGroupService {
 
     @Override
     public ThreadGroup getThreadGroup(@NonNull final ApplicationModule applicationModule) {
-        return moduleThreadGroups.computeIfAbsent(applicationModule, (co.runrightfast.zest.composites.values.ApplicationModule key) -> {
+        return moduleThreadGroups.computeIfAbsent(applicationModule, (co.runrightfast.zest.composites.services.ApplicationModule key) -> {
             final ThreadGroup layerThreadGroup = layerThreadGroups.computeIfAbsent(key.layerName().get(), (java.lang.String layerName) -> {
                 return new ThreadGroup(applicationThreadGroup, layerThreadGroupName(layerName));
             });

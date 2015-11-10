@@ -13,9 +13,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.composites.values;
+package co.runrightfast.zest.composites.services;
 
-import co.runrightfast.zest.composites.values.ApplicationModuleFactory.ApplicationModuleFactoryMixin;
+import co.runrightfast.zest.composites.services.ApplicationModuleFactory.ApplicationModuleFactoryMixin;
 import org.qi4j.api.injection.scope.Structure;
 import org.qi4j.api.mixin.Mixins;
 import org.qi4j.api.structure.Application;

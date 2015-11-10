@@ -50,7 +50,7 @@ public interface ConcurrentAssemblers {
      * @param module ModuleAssembly
      * @return ModuleAssembly
      */
-    static ModuleAssembly assempleThreadFactoryService(@NonNull final ModuleAssembly module) {
+    static ModuleAssembly assembleThreadFactoryService(@NonNull final ModuleAssembly module) {
         module.services(ThreadFactoryService.class);
         module.entities(ThreadFactoryConfig.class);
         return module;

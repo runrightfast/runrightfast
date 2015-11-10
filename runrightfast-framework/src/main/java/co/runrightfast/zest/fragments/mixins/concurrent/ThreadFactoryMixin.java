@@ -18,17 +18,15 @@ package co.runrightfast.zest.fragments.mixins.concurrent;
 import co.runrightfast.zest.composites.services.concurrent.ThreadFactoryService;
 import co.runrightfast.zest.composites.services.concurrent.ThreadGroupService;
 import co.runrightfast.zest.composites.services.concurrent.config.ThreadFactoryConfig;
-import co.runrightfast.zest.composites.values.ApplicationModule;
-import co.runrightfast.zest.composites.values.ApplicationModuleFactory;
+import co.runrightfast.zest.composites.services.ApplicationModule;
+import co.runrightfast.zest.composites.services.ApplicationModuleFactory;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
 import org.qi4j.api.configuration.Configuration;
 import org.qi4j.api.injection.scope.Service;
-import org.qi4j.api.injection.scope.Structure;
 import org.qi4j.api.injection.scope.This;
-import org.qi4j.api.structure.Module;
 
 /**
  *
@@ -58,8 +56,8 @@ public class ThreadFactoryMixin implements ThreadFactoryService {
     @This
     private Configuration<ThreadFactoryConfig> threadFactoryConfig;
 
-    public ThreadFactoryMixin(@Structure final Module module, @Service final ThreadGroupService threadGroupService) {
-        this.applicationModule = module.newValue(ApplicationModuleFactory.class).applicationModule();
+    public ThreadFactoryMixin(@Service final ApplicationModuleFactory applicationModuleFactory, @Service final ThreadGroupService threadGroupService) {
+        this.applicationModule = applicationModuleFactory.applicationModule();
         this.group = threadGroupService.getThreadGroup(applicationModule);
     }
 

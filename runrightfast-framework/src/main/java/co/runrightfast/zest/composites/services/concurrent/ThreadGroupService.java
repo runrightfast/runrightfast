@@ -15,7 +15,7 @@
  */
 package co.runrightfast.zest.composites.services.concurrent;
 
-import co.runrightfast.zest.composites.values.ApplicationModule;
+import co.runrightfast.zest.composites.services.ApplicationModule;
 import co.runrightfast.zest.fragments.mixins.concurrent.ThreadGroupServiceMixin;
 import org.qi4j.api.mixin.Mixins;
 

@@ -19,8 +19,6 @@ import co.runrightfast.zest.composites.services.json.GsonProvider;
 import co.runrightfast.zest.fragments.mixins.json.GsonValueSerialization;
 import java.util.function.Function;
 import lombok.NonNull;
-import static org.apache.commons.lang3.Validate.noNullElements;
-import static org.apache.commons.lang3.Validate.notEmpty;
 import org.qi4j.api.common.Visibility;
 import org.qi4j.api.value.ValueSerialization;
 import org.qi4j.bootstrap.ModuleAssembly;
@@ -30,23 +28,6 @@ import org.qi4j.bootstrap.ModuleAssembly;
  * @author alfio
  */
 public interface ApplicationCoreAssemblers {
-
-    /**
-     * builds upon {@link #coreAssemblers() }, chaining on the provided assemblers
-     *
-     * @param assemblers composeAssembler chain - required
-     * @return composed module composeAssembler function
-     */
-    static Function<ModuleAssembly, ModuleAssembly> composeAssemblerWithBaseAssemblers(final Function<ModuleAssembly, ModuleAssembly>... assemblers) {
-        notEmpty(assemblers);
-        noNullElements(assemblers);
-
-        Function<ModuleAssembly, ModuleAssembly> chain = coreAssemblers();
-        for (final Function<ModuleAssembly, ModuleAssembly> assembler : assemblers) {
-            chain = chain.andThen(assembler);
-        }
-        return chain;
-    }
 
     /**
      * Base assembler functions include :
@@ -60,7 +41,8 @@ public interface ApplicationCoreAssemblers {
      * @return function for composing modules
      */
     static Function<ModuleAssembly, ModuleAssembly> coreAssemblers() {
-        return ModuleAssembler.composeAssembler(ApplicationCoreAssemblers::assembleDefaultGsonProvider,
+        return ModuleAssembler.composeAssembler(
+                ApplicationCoreAssemblers::assembleDefaultGsonProvider,
                 ApplicationCoreAssemblers::assembleJsonValueSerialization,
                 ConcurrentAssemblers::assembleThreadGroupService,
                 ReactorAssemblers::assembleDefaultReactorEnvironment
