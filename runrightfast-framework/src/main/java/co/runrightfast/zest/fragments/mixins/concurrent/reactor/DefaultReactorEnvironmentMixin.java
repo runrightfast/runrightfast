@@ -15,7 +15,7 @@
  */
 package co.runrightfast.zest.fragments.mixins.concurrent.reactor;
 
-import co.runrightfast.zest.composites.services.concurrent.reactor.ReactorEnvironmentProvider;
+import co.runrightfast.zest.composites.services.concurrent.reactor.ReactorEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import reactor.Environment;
 
@@ -24,7 +24,7 @@ import reactor.Environment;
  * @author alfio
  */
 @Slf4j
-public class DefaultReactorEnvironmentProviderMixin implements ReactorEnvironmentProvider {
+public class DefaultReactorEnvironmentMixin implements ReactorEnvironment {
 
     private Environment environment;
 
@@ -35,14 +35,16 @@ public class DefaultReactorEnvironmentProviderMixin implements ReactorEnvironmen
 
     @Override
     public void activateService() throws Exception {
-        environment = Environment.initialize(uncaughtException -> {
+        environment = Environment.initializeIfEmpty();
+
+        environment.assignErrorJournal(uncaughtException -> {
             log.error("Uncaught exception from Reactor Environment", uncaughtException);
         });
     }
 
     @Override
     public void passivateService() throws Exception {
-        environment.shutdown();
+        Environment.terminate();
     }
 
 }

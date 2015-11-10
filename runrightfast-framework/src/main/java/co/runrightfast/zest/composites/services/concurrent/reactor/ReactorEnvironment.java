@@ -13,23 +13,17 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.composites.services.concurrent.reactor.config;
+package co.runrightfast.zest.composites.services.concurrent.reactor;
 
-import java.util.Set;
-import org.qi4j.api.configuration.ConfigurationComposite;
-import org.qi4j.api.property.Property;
-import org.qi4j.library.constraints.annotation.NotEmpty;
+import org.qi4j.api.service.ServiceActivation;
+import reactor.Environment;
 
 /**
  *
  * @author alfio
  */
-public interface ReactorEnvironmentConfig extends ConfigurationComposite {
+public interface ReactorEnvironment extends ServiceActivation {
 
-    @NotEmpty
-    Property<String> defaultDispatcherName();
-
-    @NotEmpty
-    Property<Set<DispatcherConfig>> dispatcherConfigs();
+    Environment environment();
 
 }

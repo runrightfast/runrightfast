@@ -20,11 +20,31 @@
       </task-args>
       <task-jvm-args/>
     </task>
+    <task>
+      <display-name>rebuild</display-name>
+      <non-blocking>yes</non-blocking>
+      <task-names>
+        <name must-exist="no">clean</name>
+        <name must-exist="no">build</name>
+      </task-names>
+      <task-args>
+        <arg>--info</arg>
+      </task-args>
+      <task-jvm-args/>
+    </task>
+    <task>
+      <display-name>build</display-name>
+      <non-blocking>yes</non-blocking>
+      <task-names>
+        <name must-exist="no">build</name>
+      </task-names>
+      <task-args>
+        <arg>--info</arg>
+      </task-args>
+      <task-jvm-args/>
+    </task>
   </built-in-tasks>
   <auxiliary>
-    <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
-      <word>Disruptor</word>
-    </spellchecker-wordlist>
     <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
       <word>Disruptor</word>
     </spellchecker-wordlist>

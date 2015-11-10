@@ -15,8 +15,12 @@
  */
 package co.runrightfast.zest.assemblers;
 
-import co.runrightfast.zest.composites.services.concurrent.reactor.ReactorEnvironmentProvider;
-import co.runrightfast.zest.fragments.mixins.concurrent.reactor.DefaultReactorEnvironmentProviderMixin;
+import co.runrightfast.zest.composites.services.concurrent.reactor.ReactorEnvironment;
+import co.runrightfast.zest.composites.services.concurrent.reactor.RingBufferDispatcherProvider;
+import co.runrightfast.zest.composites.services.concurrent.reactor.WorkQueueDispatcherProvider;
+import co.runrightfast.zest.fragments.mixins.concurrent.reactor.ApplicationRingBufferDispatcherProviderMixin;
+import co.runrightfast.zest.fragments.mixins.concurrent.reactor.ApplicationWorkQueueDispatcherProviderMixin;
+import co.runrightfast.zest.fragments.mixins.concurrent.reactor.DefaultReactorEnvironmentMixin;
 import lombok.NonNull;
 import org.qi4j.api.common.Visibility;
 import org.qi4j.bootstrap.ModuleAssembly;
@@ -28,9 +32,18 @@ import org.qi4j.bootstrap.ModuleAssembly;
 public interface ReactorAssemblers {
 
     static ModuleAssembly assembleDefaultReactorEnvironment(@NonNull final ModuleAssembly module) {
-        module.services(ReactorEnvironmentProvider.class)
-                .withMixins(DefaultReactorEnvironmentProviderMixin.class)
+        module.services(ReactorEnvironment.class)
+                .withMixins(DefaultReactorEnvironmentMixin.class)
                 .visibleIn(Visibility.application);
+
+        module.services(RingBufferDispatcherProvider.class)
+                .withMixins(ApplicationRingBufferDispatcherProviderMixin.class)
+                .visibleIn(Visibility.application);
+
+        module.services(WorkQueueDispatcherProvider.class)
+                .withMixins(ApplicationWorkQueueDispatcherProviderMixin.class)
+                .visibleIn(Visibility.application);
+
         return module;
     }
 

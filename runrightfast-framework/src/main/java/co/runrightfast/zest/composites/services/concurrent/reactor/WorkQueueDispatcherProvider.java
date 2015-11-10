@@ -13,18 +13,15 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.composites.services.concurrent.reactor.config;
+package co.runrightfast.zest.composites.services.concurrent.reactor;
 
-import java.lang.annotation.Retention;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import org.qi4j.api.constraint.ConstraintDeclaration;
+import reactor.core.Dispatcher;
 
 /**
  *
  * @author alfio
  */
-@ConstraintDeclaration
-@Retention(value = RUNTIME)
-public @interface CheckDefaultDispatcherConfigExists {
+public interface WorkQueueDispatcherProvider {
 
+    Dispatcher workQueueDispatcher();
 }

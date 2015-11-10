@@ -13,25 +13,15 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.composites.services.concurrent.reactor.config;
+package co.runrightfast.zest.composites.services.concurrent.reactor;
 
-import org.qi4j.api.property.Property;
-import org.qi4j.library.constraints.annotation.NotEmpty;
-import reactor.core.config.DispatcherType;
+import reactor.core.Dispatcher;
 
 /**
  *
  * @author alfio
  */
-public interface DispatcherConfig {
+public interface RingBufferDispatcherProvider {
 
-    @NotEmpty
-    Property<String> name();
-
-    Property<Integer> size();
-
-    Property<Integer> backlog();
-
-    Property<DispatcherType> type();
-
+    Dispatcher ringBufferDispatcher();
 }
