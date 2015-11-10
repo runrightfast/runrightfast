@@ -18,7 +18,7 @@ package co.runrightfast.zest.fragments.mixins.concurrent.reactor;
 import co.runrightfast.zest.composites.services.ApplicationModule;
 import co.runrightfast.zest.composites.services.ApplicationModuleFactory;
 import co.runrightfast.zest.composites.services.concurrent.reactor.ReactorEnvironment;
-import co.runrightfast.zest.composites.services.concurrent.reactor.RingBufferDispatcherProvider;
+import co.runrightfast.zest.composites.services.concurrent.reactor.WorkQueueDispatcherProvider;
 import static co.runrightfast.zest.composites.services.concurrent.reactor.config.RingBufferDispatcherConfig.backlog;
 import co.runrightfast.zest.composites.services.concurrent.reactor.config.WorkQueueDispatcherConfig;
 import static co.runrightfast.zest.composites.services.concurrent.reactor.config.WorkQueueDispatcherConfig.size;
@@ -33,7 +33,7 @@ import reactor.core.Dispatcher;
  *
  * @author alfio
  */
-public class ModuleWorkQueueDispatcherProviderMixin implements RingBufferDispatcherProvider {
+public class ModuleWorkQueueDispatcherProviderMixin implements WorkQueueDispatcherProvider {
 
     @Service
     private ReactorEnvironment env;
@@ -56,8 +56,7 @@ public class ModuleWorkQueueDispatcherProviderMixin implements RingBufferDispatc
     }
 
     @Override
-
-    public Dispatcher ringBufferDispatcher() {
+    public Dispatcher workQueueDispatcher() {
         return dispatcher;
     }
 

@@ -40,12 +40,8 @@ public interface BaseModuleAssemblers {
      * @return ModuleAssembly
      */
     static ModuleAssembly assembleApplicationModule(@NonNull final ModuleAssembly module) {
-        module.values(
-                ApplicationModule.class
-        );
-
+        module.values(ApplicationModule.class);
         module.services(ApplicationModuleFactory.class);
-
         return module;
     }
 

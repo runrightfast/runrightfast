@@ -16,7 +16,9 @@
 package co.runrightfast.zest.composites.services.concurrent.reactor.config;
 
 import lombok.NonNull;
+import org.qi4j.api.common.Optional;
 import org.qi4j.api.property.Property;
+import reactor.Environment;
 
 /**
  *
@@ -24,11 +26,17 @@ import org.qi4j.api.property.Property;
  */
 public interface WorkQueueDispatcherConfig extends RingBufferDispatcherConfig {
 
+    @Optional
     Property<Integer> size();
 
+    /**
+     *
+     * @param size if not specified, then return the number of CPU processors the machine has x 2
+     * @return the size of the worker pool
+     */
     static int size(@NonNull final Property<Integer> size) {
         if (size.get() == null) {
-            return 0;
+            return Environment.PROCESSORS * 2;
         }
 
         return size.get();
