@@ -15,6 +15,7 @@
  */
 package co.runrightfast.zest.composites.services;
 
+import lombok.NonNull;
 import org.qi4j.api.property.Property;
 
 /**
@@ -30,5 +31,19 @@ public interface ApplicationModule {
     Property<String> layerName();
 
     Property<String> moduleName();
+
+    static String uri(@NonNull final ApplicationModule appModule) {
+        final String appName = appModule.applicationName().get();
+        final String appVersion = appModule.applicationVersion().get();
+        final String layer = appModule.layerName().get();
+        final String module = appModule.moduleName().get();
+        final int length = appName.length() + appVersion.length() + layer.length() + module.length();
+        return new StringBuilder(length + 4)
+                .append('/').append(appName)
+                .append('/').append(appVersion)
+                .append('/').append(layer)
+                .append('/').append(module)
+                .toString();
+    }
 
 }

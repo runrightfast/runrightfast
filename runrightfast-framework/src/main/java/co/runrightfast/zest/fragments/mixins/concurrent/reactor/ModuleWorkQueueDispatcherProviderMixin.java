@@ -19,7 +19,9 @@ import co.runrightfast.zest.composites.services.ApplicationModule;
 import co.runrightfast.zest.composites.services.ApplicationModuleFactory;
 import co.runrightfast.zest.composites.services.concurrent.reactor.ReactorEnvironment;
 import co.runrightfast.zest.composites.services.concurrent.reactor.RingBufferDispatcherProvider;
-import co.runrightfast.zest.composites.services.concurrent.reactor.config.RingBufferDispatcherConfig;
+import static co.runrightfast.zest.composites.services.concurrent.reactor.config.RingBufferDispatcherConfig.backlog;
+import co.runrightfast.zest.composites.services.concurrent.reactor.config.WorkQueueDispatcherConfig;
+import static co.runrightfast.zest.composites.services.concurrent.reactor.config.WorkQueueDispatcherConfig.size;
 import org.qi4j.api.configuration.Configuration;
 import org.qi4j.api.injection.scope.Service;
 import org.qi4j.api.injection.scope.This;
@@ -31,7 +33,7 @@ import reactor.core.Dispatcher;
  *
  * @author alfio
  */
-public class ModuleRingBufferDispatcherProviderMixin implements RingBufferDispatcherProvider {
+public class ModuleWorkQueueDispatcherProviderMixin implements RingBufferDispatcherProvider {
 
     @Service
     private ReactorEnvironment env;
@@ -40,15 +42,15 @@ public class ModuleRingBufferDispatcherProviderMixin implements RingBufferDispat
     private ApplicationModuleFactory appModuleFactory;
 
     @This
-    private Configuration<RingBufferDispatcherConfig> config;
+    private Configuration<WorkQueueDispatcherConfig> config;
 
     private Dispatcher dispatcher;
 
     private String dispatcherKey(final ApplicationModule appModule) {
         final String layerName = appModule.layerName().get();
         final String moduleName = appModule.moduleName().get();
-        return new StringBuilder(layerName.length() + moduleName.length() + 2)
-                .append('/').append(layerName)
+        return new StringBuilder(layerName.length() + moduleName.length() + "/workQueue/".length() + 1)
+                .append("/workQueue/").append(layerName)
                 .append('/').append(moduleName)
                 .toString();
     }
@@ -62,7 +64,11 @@ public class ModuleRingBufferDispatcherProviderMixin implements RingBufferDispat
     @Override
     public void activateService() throws Exception {
         final String dispatcherKey = dispatcherKey(appModuleFactory.applicationModule());
-        this.dispatcher = Environment.newDispatcher(dispatcherKey, RingBufferDispatcherConfig.backlog(config.get().backlog()));
+        this.dispatcher = Environment.newDispatcher(
+                dispatcherKey,
+                backlog(config.get().backlog()),
+                size(config.get().size())
+        );
     }
 
     @Override

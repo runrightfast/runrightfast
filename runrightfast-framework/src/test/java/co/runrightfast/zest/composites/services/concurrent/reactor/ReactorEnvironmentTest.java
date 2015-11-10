@@ -25,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
-import org.qi4j.api.service.ServiceReference;
 import org.qi4j.bootstrap.AssemblyException;
 import org.qi4j.bootstrap.ModuleAssembly;
 import org.qi4j.test.AbstractQi4jTest;
@@ -51,10 +50,6 @@ public class ReactorEnvironmentTest extends AbstractQi4jTest {
 
     @Test
     public void testEnvironment() throws InterruptedException {
-        final ServiceReference<ReactorEnvironment> serviceRef = module.findService(ReactorEnvironment.class);
-        final ReactorEnvironment service = serviceRef.get();
-        final Environment env = service.environment();
-
         assertThat(testDispatcher(2, Environment.cachedDispatcher()).size(), is(1));
         assertThat(testDispatcher(Environment.PROCESSORS, Environment.sharedDispatcher()).size(), is(1));
         assertThat(testDispatcher(Environment.PROCESSORS * 2, Environment.workDispatcher()).size() >= Environment.PROCESSORS, is(true));

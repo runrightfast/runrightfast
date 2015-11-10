@@ -20,13 +20,13 @@ import co.runrightfast.zest.assemblers.ApplicationCoreAssemblers;
 import co.runrightfast.zest.assemblers.BaseModuleAssemblers;
 import co.runrightfast.zest.assemblers.ConcurrentAssemblers;
 import co.runrightfast.zest.assemblers.ModuleAssembler;
+import co.runrightfast.zest.composites.services.ApplicationModule;
+import co.runrightfast.zest.composites.services.ApplicationModuleFactory;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadFactoryServiceTest.AppLayer.DOMAIN;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadFactoryServiceTest.AppLayer.INFRASTRUCTURE;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadFactoryServiceTest.AppModule.CORE;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadFactoryServiceTest.AppModule.MODULE_1;
 import static co.runrightfast.zest.composites.services.concurrent.ThreadFactoryServiceTest.AppModule.MODULE_2;
-import co.runrightfast.zest.composites.services.ApplicationModule;
-import co.runrightfast.zest.composites.services.ApplicationModuleFactory;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.logging.Level;
@@ -176,7 +176,10 @@ public class ThreadFactoryServiceTest {
 
     private void assembleAppModule(final LayerAssembly layer, final AppModule appModule) {
         final ModuleAssembly module = layer.module(appModule.name);
-        BaseModuleAssemblers.baseAssemblers().apply(module);
+        ModuleAssembler.composeAssembler(
+                BaseModuleAssemblers::assembleApplicationModule,
+                ConcurrentAssemblers::assembleThreadFactoryService
+        ).apply(module);
     }
 
     private void assembleCoreModule(final LayerAssembly layer, final AppModule appModule) {

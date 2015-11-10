@@ -17,7 +17,6 @@ package co.runrightfast.zest.assemblers;
 
 import co.runrightfast.zest.composites.services.ApplicationModule;
 import co.runrightfast.zest.composites.services.ApplicationModuleFactory;
-import java.util.function.Function;
 import lombok.NonNull;
 import org.qi4j.bootstrap.ModuleAssembly;
 
@@ -27,22 +26,6 @@ import org.qi4j.bootstrap.ModuleAssembly;
  * @author alfio
  */
 public interface BaseModuleAssemblers {
-
-    /**
-     * Base assembler functions include :
-     * <ol>
-     * <li>{@link #assembleApplicationModule(org.qi4j.bootstrap.ModuleAssembly) }
-     * <li>{@link ConcurrentAssemblers#assembleThreadFactoryService(org.qi4j.bootstrap.ModuleAssembly) }
-     * </ol>
-     *
-     * @return function for composing modules
-     */
-    static Function<ModuleAssembly, ModuleAssembly> baseAssemblers() {
-        return ModuleAssembler.composeAssembler(
-                BaseModuleAssemblers::assembleApplicationModule,
-                ConcurrentAssemblers::assembleThreadFactoryService
-        );
-    }
 
     /**
      * Adds the following value composites to the module with module scope visibility:

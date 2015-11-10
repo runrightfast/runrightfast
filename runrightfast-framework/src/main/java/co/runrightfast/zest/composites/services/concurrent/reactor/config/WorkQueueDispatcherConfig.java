@@ -13,16 +13,24 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.zest.composites.services.concurrent.reactor;
+package co.runrightfast.zest.composites.services.concurrent.reactor.config;
 
-import org.qi4j.api.service.ServiceActivation;
-import reactor.core.Dispatcher;
+import lombok.NonNull;
+import org.qi4j.api.property.Property;
 
 /**
  *
  * @author alfio
  */
-public interface RingBufferDispatcherProvider extends ServiceActivation {
+public interface WorkQueueDispatcherConfig extends RingBufferDispatcherConfig {
 
-    Dispatcher ringBufferDispatcher();
+    Property<Integer> size();
+
+    static int size(@NonNull final Property<Integer> size) {
+        if (size.get() == null) {
+            return 0;
+        }
+
+        return size.get();
+    }
 }

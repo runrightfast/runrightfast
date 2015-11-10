@@ -42,4 +42,12 @@ public class ApplicationRingBufferDispatcherProviderMixin implements RingBufferD
         return dispatcher;
     }
 
+    @Override
+    public void activateService() {
+    }
+
+    @Override
+    public void passivateService() {
+    }
+
 }

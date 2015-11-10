@@ -34,8 +34,8 @@ public interface ApplicationCoreAssemblers {
      * <ol>
      * <li>{@link #assembleJsonValueSerialization(org.qi4j.bootstrap.ModuleAssembly) }
      * <li>{@link #assembleDefaultGsonProvider(org.qi4j.bootstrap.ModuleAssembly) }
-     * <li>{@link ConcurrentAssemblers#assembleThreadGroupService(org.qi4j.bootstrap.ModuleAssembly) }
      * <li>{@link ReactorAssemblers#assembleDefaultReactorEnvironment(org.qi4j.bootstrap.ModuleAssembly) }
+     * <li>{@link BaseModuleAssemblers#assembleApplicationModule(org.qi4j.bootstrap.ModuleAssembly) }
      * </ol>
      *
      * @return function for composing modules
@@ -44,8 +44,8 @@ public interface ApplicationCoreAssemblers {
         return ModuleAssembler.composeAssembler(
                 ApplicationCoreAssemblers::assembleDefaultGsonProvider,
                 ApplicationCoreAssemblers::assembleJsonValueSerialization,
-                ConcurrentAssemblers::assembleThreadGroupService,
-                ReactorAssemblers::assembleDefaultReactorEnvironment
+                ReactorAssemblers::assembleDefaultReactorEnvironment,
+                BaseModuleAssemblers::assembleApplicationModule
         );
     }
 

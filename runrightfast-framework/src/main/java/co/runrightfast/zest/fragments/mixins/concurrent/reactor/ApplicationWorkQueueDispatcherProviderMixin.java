@@ -42,4 +42,12 @@ public class ApplicationWorkQueueDispatcherProviderMixin implements WorkQueueDis
         return dispatcher;
     }
 
+    @Override
+    public void activateService() {
+    }
+
+    @Override
+    public void passivateService() {
+    }
+
 }
