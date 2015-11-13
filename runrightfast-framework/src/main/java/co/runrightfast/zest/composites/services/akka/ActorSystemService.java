@@ -13,28 +13,16 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package co.runrightfast.incubator.app.domain;
+package co.runrightfast.zest.composites.services.akka;
 
-import static co.runrightfast.commons.utils.ValidationUtils.notEmpty;
-import java.util.Set;
-import lombok.NonNull;
-import lombok.Value;
+import akka.actor.ActorSystem;
 
 /**
  *
  * @author alfio
  */
-@Value
-public class ComponentVersionFeatures {
+public interface ActorSystemService {
 
-    ComponentVersion componentVersion;
-
-    Set<Feature> features;
-
-    public ComponentVersionFeatures(@NonNull final ComponentVersion componentVersion, final Set<Feature> features) {
-        notEmpty(features);
-        this.componentVersion = componentVersion;
-        this.features = features;
-    }
+    ActorSystem actorSystem();
 
 }

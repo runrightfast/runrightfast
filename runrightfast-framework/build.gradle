@@ -18,6 +18,8 @@ dependencies {
     compile group:'org.qi4j.extension', name:'org.qi4j.extension.entitystore-memory'
     compile group:'org.qi4j.extension', name:'org.qi4j.extension.valueserialization-orgjson'
     
+    compile group:'org.reactivestreams', name:'reactive-streams'
+    
     compile group: 'com.typesafe.akka', name: 'akka-actor_2.11'
     
     runtime group:'org.slf4j', name:'slf4j-jdk14'

@@ -15,7 +15,7 @@
  */
 package co.runrightfast.incubator.commons.disruptor;
 
-import static co.runrightfast.commons.utils.PreconditionUtils.greaterThanOrEqualZero;
+import static co.runrightfast.commons.utils.ValidationUtils.greaterThanOrEqualZero;
 import com.lmax.disruptor.SleepingWaitStrategy;
 import com.lmax.disruptor.WaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;

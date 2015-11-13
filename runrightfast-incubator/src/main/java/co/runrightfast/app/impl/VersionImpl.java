@@ -16,8 +16,8 @@
 package co.runrightfast.app.impl;
 
 import co.runrightfast.app.Version;
-import static co.runrightfast.commons.utils.PreconditionUtils.greaterThanOrEqualZero;
-import static co.runrightfast.commons.utils.PreconditionUtils.greaterThanZero;
+import static co.runrightfast.commons.utils.ValidationUtils.greaterThanOrEqualZero;
+import static co.runrightfast.commons.utils.ValidationUtils.greaterThanZero;
 import lombok.Value;
 
 /**

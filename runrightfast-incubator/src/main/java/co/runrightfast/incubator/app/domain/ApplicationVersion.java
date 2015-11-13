@@ -15,7 +15,7 @@
  */
 package co.runrightfast.incubator.app.domain;
 
-import static co.runrightfast.commons.utils.PreconditionUtils.notEmpty;
+import static co.runrightfast.commons.utils.ValidationUtils.notEmpty;
 import java.util.Set;
 import lombok.NonNull;
 import lombok.Value;

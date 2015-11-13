@@ -16,8 +16,8 @@
 package co.runrightfast.incubator.app.domain;
 
 import static co.runrightfast.commons.utils.AppUtils.uri;
-import static co.runrightfast.commons.utils.PreconditionUtils.greaterThanOrEqualZero;
-import static co.runrightfast.commons.utils.PreconditionUtils.greaterThanZero;
+import static co.runrightfast.commons.utils.ValidationUtils.greaterThanOrEqualZero;
+import static co.runrightfast.commons.utils.ValidationUtils.greaterThanZero;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.net.URI;
 import lombok.Value;

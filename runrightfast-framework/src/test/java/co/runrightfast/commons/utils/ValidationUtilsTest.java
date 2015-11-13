@@ -21,30 +21,30 @@ import org.junit.Test;
  *
  * @author alfio
  */
-public class PreconditionUtilsTest {
+public class ValidationUtilsTest {
 
     @Test
     public void testGreaterThanOrEqualZero() {
-        PreconditionUtils.greaterThanOrEqualZero(1, "a");
-        PreconditionUtils.greaterThanOrEqualZero(0, "a");
+        ValidationUtils.greaterThanOrEqualZero(1, "a");
+        ValidationUtils.greaterThanOrEqualZero(0, "a");
     }
 
     @Test
     public void testGreaterThanZero() {
-        PreconditionUtils.greaterThanZero(1, "a");
+        ValidationUtils.greaterThanZero(1, "a");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGreaterThanOrEqualZero_invalid() {
-        PreconditionUtils.greaterThanOrEqualZero(-1, "a");
+        ValidationUtils.greaterThanOrEqualZero(-1, "a");
     }
 
     /**
-     * Test of greaterThanZero method, of class PreconditionUtils.
+     * Test of greaterThanZero method, of class ValidationUtils.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testGreaterThanZero_invalid() {
-        PreconditionUtils.greaterThanZero(0, "a");
+        ValidationUtils.greaterThanZero(0, "a");
     }
 
 }

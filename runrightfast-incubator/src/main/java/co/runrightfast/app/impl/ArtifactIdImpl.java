@@ -17,7 +17,7 @@ package co.runrightfast.app.impl;
 
 import co.runrightfast.app.ArtifactId;
 import co.runrightfast.app.Version;
-import static co.runrightfast.commons.utils.PreconditionUtils.notBlank;
+import static co.runrightfast.commons.utils.ValidationUtils.notBlank;
 import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

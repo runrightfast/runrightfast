@@ -147,6 +147,8 @@ dependencyManagement {
         dependency 'io.reactivex:rxjava-async-util:0.21.0'
         dependency 'io.reactivex:rxjava-computation-expressions:0.21.0'
         
+        dependency 'org.reactivestreams:reactive-streams:1.0.0'
+        
         dependencySet(group:'io.vertx', version: '3.1.0') {
             entry 'vertx-core'
             entry 'vertx-hazelcast'

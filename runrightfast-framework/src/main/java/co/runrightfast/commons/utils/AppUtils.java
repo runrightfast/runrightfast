@@ -15,7 +15,7 @@
  */
 package co.runrightfast.commons.utils;
 
-import static co.runrightfast.commons.utils.PreconditionUtils.notBlank;
+import static co.runrightfast.commons.utils.ValidationUtils.notBlank;
 import co.runrightfast.exceptions.ShouldNeverHappenException;
 import java.lang.management.ManagementFactory;
 import java.net.URI;
