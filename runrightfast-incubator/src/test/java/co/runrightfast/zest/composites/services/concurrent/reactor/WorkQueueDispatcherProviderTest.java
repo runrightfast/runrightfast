@@ -159,6 +159,7 @@ public class WorkQueueDispatcherProviderTest {
             final LayerAssembly layer_1 = assembly.layer(LAYER_1.name);
             ModuleAssembler.composeAssembler(
                     ApplicationCoreAssemblers.coreAssemblers(),
+                    ReactorAssemblers::assembleDefaultReactorEnvironment,
                     module -> {
                         final MemoryEntityStoreAssembler memoryEntityStoreAssembler = new MemoryEntityStoreAssembler();
                         memoryEntityStoreAssembler.visibleIn(Visibility.application);

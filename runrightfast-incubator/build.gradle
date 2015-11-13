@@ -9,4 +9,16 @@ dependencies {
     compile group: 'io.dropwizard.metrics', name:'metrics-healthchecks'
     
     compile group: 'com.lmax', name: 'disruptor'
+    
+    compile group:'io.projectreactor', name:'reactor-core'
+    compile group:'io.projectreactor', name:'reactor-stream'
+    compile group:'io.projectreactor', name:'reactor-bus'
+    compile group:'io.projectreactor', name:'reactor-net'
+    
+    compile group:'io.netty', name:'netty-all'
+    
+    compile group: 'io.reactivex', name: 'rxjava'
+    compile group: 'io.reactivex', name: 'rxjava-joins'
+    compile group: 'io.reactivex', name: 'rxjava-async-util'
+    compile group: 'io.reactivex', name: 'rxjava-computation-expressions'
 }
