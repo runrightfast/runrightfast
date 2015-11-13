@@ -31,7 +31,8 @@ public interface AkkaAssemblers {
         assembly.services(ActorSystemService.class)
                 .withMixins(ActorSystemServiceMixin.class)
                 .withTypes(ServiceActivation.class)
-                .visibleIn(Visibility.application);
+                .visibleIn(Visibility.application)
+                .instantiateOnStartup();
 
         return assembly;
     }

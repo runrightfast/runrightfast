@@ -15,8 +15,6 @@
  */
 package co.runrightfast.incubator.app.domain;
 
-import co.runrightfast.incubator.app.domain.Namespace;
-import co.runrightfast.incubator.app.domain.Component;
 import java.net.URI;
 import java.net.URISyntaxException;
 import lombok.extern.java.Log;
@@ -47,7 +45,7 @@ public class ComponentTest {
         new Component(null, "comp1");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void testNameIsRequired() throws URISyntaxException {
         final Namespace ns = new Namespace(new URI("http://runrightfast.co"));
         final Component comp1 = new Component(ns, null);
