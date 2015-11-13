@@ -13,7 +13,7 @@ buildscript {
 
 apply plugin: "io.spring.dependency-management"
 
-apply plugin: 'java'
+apply plugin: 'scala'
 apply plugin: 'maven'
 apply plugin: 'jacoco'
 apply plugin: 'findbugs'
@@ -24,6 +24,10 @@ tasks.withType(FindBugs) {
         html.enabled = true
     }
  }
+ 
+tasks.withType(ScalaCompile) {
+  scalaCompileOptions.useAnt = false
+}
  
 findbugs {
     sourceSets = [sourceSets.main]
@@ -234,37 +238,30 @@ dependencyManagement {
         dependency 'io.netty:netty-all:4.0.33.Final'
         
         dependency 'io.reactivex:rxjava-reactive-streams:1.0.1'
+        
+        dependencySet(group:'org.scala-lang', version: "2.11.7") {
+            entry 'scala-library'
+        }
+        
+        dependencySet(group:'com.typesafe.akka', version: "2.4.0") {
+            entry 'akka-actor_2.11'
+            entry 'akka-agent_2.11'
+            entry 'akka-cluster_2.11'
+            entry 'akka-cluster-sharding_2.11'
+            entry 'akka-cluster-metrics_2.11'
+            entry 'akka-cluster-tools_2.11'
+            entry 'akka-contrib_2.11'
+            entry 'akka-persistence_2.11'
+            entry 'akka-protobuf_2.11'
+            entry 'akka-remote_2.11'
+            entry 'akka-multi-node-testkit_2.11'
+            entry 'akka-testkit_2.11'
+        }
      }
 }
 
 dependencies {
-//    compile 'org.projectlombok:lombok'
-//    
-//    compile 'org.slf4j:slf4j-jdk14'
-//
-//    compile 'com.google.guava:guava'
-//    
-//    compile 'org.apache.commons:commons-lang3'
-//    compile 'org.apache.commons:commons-collections4'
-//    compile 'commons-io:commons-io'
-//    compile 'commons-cli:commons-cli'
-//    
-//    compile 'com.typesafe:config'
-//    
-//    compile 'com.google.dagger:dagger'
-//    compile 'com.google.dagger:dagger-compiler'
-//    
-//    compile 'io.dropwizard.metrics:metrics-core'
-//    compile 'io.dropwizard.metrics:metrics-healthchecks'
-//    
-//    compile 'org.glassfish:javax.json'
-//    compile 'com.google.code.gson:gson'
-//    
-//    compile 'com.google.protobuf:protobuf-java'
-//    
-//    compile 'io.vertx:vertx-core'    
-//    compile 'io.vertx:vertx-dropwizard-metrics'
-//    compile 'io.vertx:vertx-hazelcast'
+    compile group: 'org.scala-lang', name: 'scala-library'
         
     // Adding dependencies here will add the dependencies to each subproject.
     testCompile 'junit:junit'
