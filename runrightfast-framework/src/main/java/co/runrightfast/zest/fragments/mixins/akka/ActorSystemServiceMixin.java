@@ -15,19 +15,33 @@
  */
 package co.runrightfast.zest.fragments.mixins.akka;
 
+import akka.actor.ActorIdentity;
+import akka.actor.ActorRef;
 import akka.actor.ActorSelection;
 import akka.actor.ActorSystem;
+import akka.actor.Identify;
+import akka.actor.Inbox;
 import akka.actor.PoisonPill;
+import akka.actor.Terminated;
 import co.runrightfast.akka.AkkaUtils;
 import static co.runrightfast.akka.AkkaUtils.USER;
 import static co.runrightfast.akka.AkkaUtils.WILDCARD;
+import static co.runrightfast.commons.utils.ConcurrentUtils.awaitCountdownLatchIgnoringInterruptedException;
 import co.runrightfast.zest.composites.services.akka.ActorSystemService;
+import com.google.common.collect.ImmutableList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import lombok.extern.slf4j.Slf4j;
 import org.qi4j.api.service.ServiceActivation;
+import scala.concurrent.duration.Duration;
 
 /**
  *
  * @author alfio
  */
+@Slf4j
 public class ActorSystemServiceMixin implements ActorSystemService, ServiceActivation {
 
     private ActorSystem actorSystem;
@@ -44,8 +58,62 @@ public class ActorSystemServiceMixin implements ActorSystemService, ServiceActiv
 
     @Override
     public void passivateService() throws Exception {
-        final ActorSelection topLevelActors = this.actorSystem.actorSelection(AkkaUtils.actorPath(USER, WILDCARD));
-        topLevelActors.tell(PoisonPill.getInstance(), actorSystem.deadLetters());
+        awaitTopLevelActorsTerminated(getTopLevelActors());
+        terminateActorSystem();
+    }
+
+    private void awaitTopLevelActorsTerminated(final List<ActorRef> topLevelActors) {
+        if (!topLevelActors.isEmpty()) {
+            topLevelActors.forEach(actorRef -> actorRef.tell(PoisonPill.getInstance(), ActorRef.noSender()));
+
+            final CountDownLatch latch = new CountDownLatch(topLevelActors.size());
+            final Inbox inbox = Inbox.create(actorSystem);
+            topLevelActors.forEach(inbox::watch);
+            new Thread(() -> {
+                int totalWaitTimeSeconds = 0;
+                while (true) {
+                    try {
+                        final Terminated terminated = (Terminated) inbox.receive(Duration.create(1, TimeUnit.SECONDS));
+                        log.info("Actor is terminated : {}", terminated.actor().path());
+                        latch.countDown();
+                    } catch (final TimeoutException ex) {
+                        log.warn("awaitTopLevelActorsTerminated() : total wait time is {} secs", ++totalWaitTimeSeconds);
+                    }
+                }
+            }).start();
+
+            awaitCountdownLatchIgnoringInterruptedException(latch, java.time.Duration.ofSeconds(10), "Waiting for top level actors to terminate");
+        }
+    }
+
+    private void terminateActorSystem() {
+        final CountDownLatch latch = new CountDownLatch(1);
+        this.actorSystem.registerOnTermination(() -> latch.countDown());
+        final String actorSystemName = this.actorSystem.name();
+        this.actorSystem.terminate();
+        awaitCountdownLatchIgnoringInterruptedException(latch, java.time.Duration.ofSeconds(10), String.format("Waiting for ActorSystem (%s) to terminate", actorSystemName));
+        log.info("ActorSystem has terminated : {}", actorSystemName);
+    }
+
+    private List<ActorRef> getTopLevelActors() {
+        final ActorSelection topLevelActorsSelection = this.actorSystem.actorSelection(AkkaUtils.actorPath(USER, WILDCARD));
+        final Inbox inbox = Inbox.create(actorSystem);
+        topLevelActorsSelection.tell(new Identify(Boolean.TRUE), inbox.getRef());
+
+        final ImmutableList.Builder<ActorRef> actorRefs = ImmutableList.builder();
+        while (true) {
+            try {
+                final ActorIdentity identity = (ActorIdentity) inbox.receive(Duration.create(1, TimeUnit.SECONDS));
+                if (identity.ref().isEmpty()) {
+                    return actorRefs.build();
+                }
+                final ActorRef actorRef = identity.getRef();
+                log.info("top level actor : {}", actorRef.path());
+                actorRefs.add(actorRef);
+            } catch (final TimeoutException ex) {
+                return actorRefs.build();
+            }
+        }
     }
 
 }
