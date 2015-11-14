@@ -81,6 +81,9 @@ public class ActorSystemServiceMixin implements ActorSystemService, ServiceActiv
                         final Terminated terminated = (Terminated) inbox.receive(Duration.create(1, TimeUnit.SECONDS));
                         log.info("Actor is terminated : {}", terminated.actor().path());
                         latch.countDown();
+                        if (latch.getCount() == 0) {
+                            return;
+                        }
                     } catch (final TimeoutException ex) {
                         log.warn("awaitTopLevelActorsTerminated() : total wait time is {} secs", ++totalWaitTimeSeconds);
                     }
