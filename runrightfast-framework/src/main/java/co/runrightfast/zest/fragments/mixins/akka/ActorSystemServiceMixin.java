@@ -37,10 +37,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.qi4j.api.service.ServiceActivation;
 import scala.concurrent.duration.Duration;
 
-/**
- *
- * @author alfio
- */
 @Slf4j
 public class ActorSystemServiceMixin implements ActorSystemService, ServiceActivation {
 
@@ -56,6 +52,12 @@ public class ActorSystemServiceMixin implements ActorSystemService, ServiceActiv
         this.actorSystem = ActorSystem.create();
     }
 
+    /**
+     * Each of the top level actors are watched for terminations. A PoisonPill is sent to each of the top level actors. After all top level actors have
+     * terminated, then the actor system is terminated.
+     *
+     * @throws Exception
+     */
     @Override
     public void passivateService() throws Exception {
         awaitTopLevelActorsTerminated(getTopLevelActors());
@@ -68,7 +70,10 @@ public class ActorSystemServiceMixin implements ActorSystemService, ServiceActiv
 
             final CountDownLatch latch = new CountDownLatch(topLevelActors.size());
             final Inbox inbox = Inbox.create(actorSystem);
-            topLevelActors.forEach(inbox::watch);
+            topLevelActors.forEach(actorRef -> {
+                log.info("Waiting for top level actor to terminate : {}", actorRef.path());
+                inbox.watch(actorRef);
+            });
             new Thread(() -> {
                 int totalWaitTimeSeconds = 0;
                 while (true) {

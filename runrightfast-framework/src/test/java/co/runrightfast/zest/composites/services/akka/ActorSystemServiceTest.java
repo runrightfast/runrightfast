@@ -22,6 +22,8 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import static co.runrightfast.zest.assemblers.akka.AkkaAssemblers.assembleActorSystem;
 import com.typesafe.config.ConfigFactory;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import lombok.extern.slf4j.Slf4j;
@@ -46,12 +48,39 @@ public class ActorSystemServiceTest extends AbstractQi4jTest {
         System.setProperty("config.resource", String.format("/%s.conf", ActorSystemServiceTest.class.getSimpleName()));
     }
 
-    static class EchoMessageActor extends UntypedActor {
+    static class Worker extends UntypedActor {
 
         @Override
         public void onReceive(final Object msg) throws Exception {
-            log.info("Received message : {}", msg);
-            sender().tell(msg, self());
+            if (msg instanceof String) {
+                log.info("Received message : {}", msg);
+                sender().tell(msg, self());
+            } else if (msg instanceof Long) {
+                log.info("Sleeping for {} msec", msg);
+                Thread.sleep((Long) msg);
+                log.info("Awake after sleeping for {} msec", msg);
+            } else {
+                unhandled(msg);
+            }
+        }
+
+    }
+
+    static class TestActor extends UntypedActor {
+
+        private ActorRef worker;
+
+        @Override
+        public void preStart() throws Exception {
+            super.preStart();
+
+            this.worker = context().actorOf(Props.create(Worker.class, () -> new Worker()), Worker.class.getSimpleName());
+        }
+
+        @Override
+        public void onReceive(final Object msg) throws Exception {
+            // forwarding worker messages in order to be able to process system messages, e.g., the Identify message
+            worker.forward(msg, context());
         }
 
     }
@@ -63,16 +92,16 @@ public class ActorSystemServiceTest extends AbstractQi4jTest {
         assertThat(service.actorSystem(), is(notNullValue()));
 
         final ActorSystem actorSystem = service.actorSystem();
-        final ActorRef echoMessageActor = actorSystem.actorOf(Props.create(EchoMessageActor.class, () -> new EchoMessageActor()), EchoMessageActor.class.getSimpleName());
+        final ActorRef testActor = actorSystem.actorOf(Props.create(TestActor.class, () -> new TestActor()), TestActor.class.getSimpleName());
         final Inbox inbox = Inbox.create(actorSystem);
         final Object msg = "CIAO COMPARI !!!";
-        echoMessageActor.tell(msg, inbox.getRef());
+        testActor.tell(msg, inbox.getRef());
         final Object reply = inbox.receive(Duration.create(1, TimeUnit.SECONDS));
         assertThat(reply, is(notNullValue()));
         assertThat(reply, is(msg));
 
         for (int i = 0; i < 100; i++) {
-            echoMessageActor.tell("MSG #" + i, inbox.getRef());
+            testActor.tell("MSG #" + i, inbox.getRef());
         }
 
         for (int i = 0; i < 100; i++) {
@@ -80,6 +109,17 @@ public class ActorSystemServiceTest extends AbstractQi4jTest {
             assertThat(msgReply, is(notNullValue()));
             log.info("Received reply: {}", msgReply);
         }
+
+        testActor.tell(java.time.Duration.ofSeconds(2).toMillis(), ActorRef.noSender());
+        final Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                // expecting this message to not be delivered because it will sent after the poison pill when the ActorSystemService is shutting down
+                testActor.tell("DROPPED MESSAGE", ActorRef.noSender());
+            }
+        }, 1000L);
     }
 
     @Override
