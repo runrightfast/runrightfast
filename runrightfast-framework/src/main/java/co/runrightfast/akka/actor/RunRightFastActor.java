@@ -65,7 +65,6 @@ public class RunRightFastActor<WORKER extends Actor> extends UntypedActor {
 
     @Override
     public void preStart() throws Exception {
-        super.preStart();
         this.worker = context().watch(context().actorOf(workerProps, WORKER_ACTOR_NAME));
     }
 

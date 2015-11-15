@@ -34,13 +34,23 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import lombok.extern.slf4j.Slf4j;
+import org.qi4j.api.injection.scope.Structure;
 import org.qi4j.api.service.ServiceActivation;
+import org.qi4j.api.structure.Application;
 import scala.concurrent.duration.Duration;
 
+/**
+ * The Application name will be used as the ActorSystem's name.
+ *
+ * @author alfio
+ */
 @Slf4j
 public class ActorSystemServiceMixin implements ActorSystemService, ServiceActivation {
 
     private ActorSystem actorSystem;
+
+    @Structure
+    private Application application;
 
     @Override
     public ActorSystem actorSystem() {
@@ -49,14 +59,14 @@ public class ActorSystemServiceMixin implements ActorSystemService, ServiceActiv
 
     @Override
     public void activateService() throws Exception {
-        this.actorSystem = ActorSystem.create();
+        this.actorSystem = ActorSystem.create(application.name());
     }
 
     /**
      * Each of the top level actors are watched for terminations. A PoisonPill is sent to each of the top level actors. After all top level actors have
      * terminated, then the actor system is terminated.
      *
-     * @throws Exception
+     * @throws Exception if anything goes wrong
      */
     @Override
     public void passivateService() throws Exception {
