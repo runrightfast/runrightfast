@@ -22,7 +22,9 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import co.runrightfast.zest.assemblers.akka.AkkaAssemblers;
 import com.typesafe.config.ConfigFactory;
-import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import lombok.extern.slf4j.Slf4j;
@@ -86,7 +88,7 @@ public class ActorSystemServicePerfTest extends AbstractQi4jTest {
      * @throws TimeoutException
      */
     @Test
-    public void perfTest() throws TimeoutException {
+    public void perfTest() throws TimeoutException, InterruptedException {
         final ActorSystemService service = this.module.findService(ActorSystemService.class).get();
 
         assertThat(service, is(notNullValue()));
@@ -97,11 +99,21 @@ public class ActorSystemServicePerfTest extends AbstractQi4jTest {
 
         final Inbox inbox = Inbox.create(actorSystem);
         final long startTime = System.currentTimeMillis();
-        for (int i = 0; i < 1000000; i++) {
-            testActor.tell(i, inbox.getRef());
+
+        final ExecutorService executor = Executors.newWorkStealingPool(8);
+
+        final int latchCount = 4;
+        final CountDownLatch latch = new CountDownLatch(latchCount);
+        for (int i = 0; i < latchCount; i++) {
+            executor.execute(() -> {
+                for (int ii = 0; ii < 1000000; ii++) {
+                    testActor.tell(ii, inbox.getRef());
+                }
+                latch.countDown();
+            });
         }
 
-        ForkJoinPool.commonPool().execute(() -> {
+        executor.execute(() -> {
             while (true) {
                 try {
                     inbox.receive(Duration.create(1, TimeUnit.SECONDS));
@@ -111,11 +123,17 @@ public class ActorSystemServicePerfTest extends AbstractQi4jTest {
                 }
             }
         });
+
+        latch.await();
+        log.info("*** Sent all messages");
+
         final Inbox doneBox = Inbox.create(actorSystem);
         testActor.tell(DONE, doneBox.getRef());
         doneBox.receive(Duration.create(10, TimeUnit.SECONDS));
         final long endTime = System.currentTimeMillis();
         log.info("total time = {}", endTime - startTime);
+
+        executor.shutdown();
     }
 
     @Override

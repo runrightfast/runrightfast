@@ -5,3 +5,15 @@
     - perf test results : 2.6 sec
     - using Reactor WorkQueue (LMAX Disruptor based) dispatcher, the perf was about 2.5x slower
 - based on these tests, reactor was taken out of the project. 
+
+## Using akka.dispatch.SingleConsumerOnlyUnboundedMailbox provides 25% perf boost over default mailbox (UnboundedMailbox)  - 2015-11-15
+- see test : co.runrightfast.zest.composites.services.akka.ActorSystemServicePerfTest
+  - the default mailbox is specified via the config:
+
+        akka {
+            actor  {
+                default-mailbox {
+                    mailbox-type = "akka.dispatch.SingleConsumerOnlyUnboundedMailbox"
+                }
+            }
+        }
