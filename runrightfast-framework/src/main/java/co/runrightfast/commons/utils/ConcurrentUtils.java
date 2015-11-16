@@ -44,7 +44,7 @@ public final class ConcurrentUtils {
      */
     public static void awaitCountdownLatch(@NonNull final CountDownLatch latch, @NonNull final Duration waitInterval, @NonNull final Runnable action) throws InterruptedException {
         awaitCountdownLatch(latch, waitInterval,
-                waitDuration -> log.warn("Waiting {} msec for count down to complete : {}", waitDuration.toMillis(), latch.getCount()),
+                waitDuration -> log.warn("waiting for {} msec, latch count = {}", waitDuration.toMillis(), latch.getCount()),
                 action
         );
     }
@@ -72,7 +72,7 @@ public final class ConcurrentUtils {
     }
 
     public static void awaitCountdownLatch(@NonNull final CountDownLatch latch, @NonNull final Duration waitInterval, @NonNull final String waitingMessage) throws InterruptedException {
-        awaitCountdownLatch(latch, waitInterval, waitDuration -> log.warn("{} : total wait time is {} msec", waitDuration.toMillis(), latch.getCount()));
+        awaitCountdownLatch(latch, waitInterval, waitDuration -> log.warn("waiting for {} msec, latch count = {}", waitDuration.toMillis(), latch.getCount()));
     }
 
     public static void awaitCountdownLatchIgnoringInterruptedException(@NonNull final CountDownLatch latch, @NonNull final Duration waitInterval, @NonNull final Consumer<Duration> waitIntervalElapsed) {
@@ -85,7 +85,7 @@ public final class ConcurrentUtils {
 
     public static void awaitCountdownLatchIgnoringInterruptedException(@NonNull final CountDownLatch latch, @NonNull final Duration waitInterval, @NonNull final String waitingMessage) {
         try {
-            awaitCountdownLatch(latch, waitInterval, waitDuration -> log.warn("{} : total wait time is {} msec", waitDuration.toMillis(), latch.getCount()));
+            awaitCountdownLatch(latch, waitInterval, waitDuration -> log.warn("waiting for {} msec, latch count = {}", waitDuration.toMillis(), latch.getCount()));
         } catch (final InterruptedException ex) {
             logInterruptedException(ex);
         }

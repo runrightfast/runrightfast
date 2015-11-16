@@ -19,18 +19,23 @@ import akka.actor.Actor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.SupervisorStrategy;
+import akka.actor.Terminated;
 import akka.actor.UntypedActor;
 import akka.japi.Creator;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
+ * The design pattern is to delegate the message processing to a worker actor. This actor's role is to serve as the worker's supervisor and decide what to do in
+ * case of a message processing exception.
  *
+ * The additional benefit is that ActorSystem messages, e.g., Identify, will be processed by the supervisor immediately.
  *
- * The worker Actor should use the parent as the sender when sending messages.
  *
  * @author alfio
  * @param <WORKER> all messages are forwarded to the worker actor
  */
+@Slf4j
 public class RunRightFastActor<WORKER extends Actor> extends UntypedActor {
 
     private final Props workerProps;
@@ -65,12 +70,21 @@ public class RunRightFastActor<WORKER extends Actor> extends UntypedActor {
 
     @Override
     public void preStart() throws Exception {
+        createWorker();
+    }
+
+    private void createWorker() {
         this.worker = context().watch(context().actorOf(workerProps, WORKER_ACTOR_NAME));
     }
 
     @Override
     public void onReceive(final Object msg) throws Exception {
-        worker.forward(msg, context());
+        if (msg instanceof Terminated) {
+            log.warn("Worker was terminated. It will be re-created");
+            createWorker();
+        } else {
+            worker.forward(msg, context());
+        }
     }
 
 }

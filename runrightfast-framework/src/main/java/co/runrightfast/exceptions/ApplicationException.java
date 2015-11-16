@@ -34,17 +34,17 @@ public class ApplicationException extends RuntimeException {
         this.severity = severity;
     }
 
-    public ApplicationException(@NonNull final ApplicationExceptionSeverity severity, final String message) {
+    public ApplicationException(@NonNull final ApplicationExceptionSeverity severity, @NonNull final String message) {
         super(message);
         this.severity = severity;
     }
 
-    public ApplicationException(@NonNull final ApplicationExceptionSeverity severity, final String message, final Throwable cause) {
+    public ApplicationException(@NonNull final ApplicationExceptionSeverity severity, @NonNull final String message, @NonNull final Throwable cause) {
         super(message, cause);
         this.severity = severity;
     }
 
-    public ApplicationException(@NonNull final ApplicationExceptionSeverity severity, final Throwable cause) {
+    public ApplicationException(@NonNull final ApplicationExceptionSeverity severity, @NonNull final Throwable cause) {
         super(cause);
         this.severity = severity;
     }

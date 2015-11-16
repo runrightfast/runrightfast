@@ -19,7 +19,6 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Inbox;
 import akka.actor.Props;
-import akka.actor.UntypedActor;
 import static co.runrightfast.zest.assemblers.akka.AkkaAssemblers.assembleActorSystem;
 import co.runrightfast.zest.composites.services.akka.ActorSystemService;
 import co.runrightfast.zest.composites.services.akka.ActorSystemServiceTest;
@@ -50,10 +49,10 @@ public class RunRightFastActorTest extends AbstractQi4jTest {
         System.setProperty("config.resource", String.format("/%s.conf", ActorSystemServiceTest.class.getSimpleName()));
     }
 
-    static class Worker extends UntypedActor {
+    static class Worker extends WorkerActor {
 
         @Override
-        public void onReceive(final Object msg) throws Exception {
+        protected void processMessage(Object msg) throws Exception {
             if (msg instanceof String) {
                 log.info("Received message : {}", msg);
                 sender().tell(msg, self());

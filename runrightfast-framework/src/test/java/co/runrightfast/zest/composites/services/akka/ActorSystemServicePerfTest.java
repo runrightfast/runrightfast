@@ -20,10 +20,9 @@ import akka.actor.ActorSystem;
 import akka.actor.Inbox;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
-import static co.runrightfast.zest.assemblers.akka.AkkaAssemblers.assembleActorSystem;
+import co.runrightfast.zest.assemblers.akka.AkkaAssemblers;
 import com.typesafe.config.ConfigFactory;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import lombok.extern.slf4j.Slf4j;
@@ -41,28 +40,22 @@ import scala.concurrent.duration.Duration;
  * @author alfio
  */
 @Slf4j
-public class ActorSystemServiceTest extends AbstractQi4jTest {
+public class ActorSystemServicePerfTest extends AbstractQi4jTest {
 
     static {
         ConfigFactory.invalidateCaches();
-        System.setProperty("config.resource", String.format("/%s.conf", ActorSystemServiceTest.class.getSimpleName()));
+        System.setProperty("config.resource", String.format("/%s.conf", ActorSystemServicePerfTest.class.getSimpleName()));
     }
+
+    static final Object DONE = new Object();
 
     static class Worker extends UntypedActor {
 
         @Override
         public void onReceive(final Object msg) throws Exception {
-            if (msg instanceof String) {
-                log.info("{} : Received message : {}", Thread.currentThread().getName(), msg);
-                if (!msg.equals("DROPPED MESSAGE")) {
-                    sender().tell(msg, self());
-                }
-            } else if (msg instanceof Long) {
-                log.info("Sleeping for {} msec", msg);
-                Thread.sleep((Long) msg);
-                log.info("Awake after sleeping for {} msec", msg);
-            } else {
-                unhandled(msg);
+            sender().tell(msg, self());
+            if (msg instanceof Integer && ((Integer) msg) % 10000 == 0) {
+                log.info("{}", msg);
             }
         }
 
@@ -87,46 +80,47 @@ public class ActorSystemServiceTest extends AbstractQi4jTest {
 
     }
 
+    /**
+     * Send 1 million messages to Akka actor which simply replies with the message that was sent.
+     *
+     * @throws TimeoutException
+     */
     @Test
-    public void testActorSystem() throws TimeoutException {
+    public void perfTest() throws TimeoutException {
         final ActorSystemService service = this.module.findService(ActorSystemService.class).get();
+
         assertThat(service, is(notNullValue()));
         assertThat(service.actorSystem(), is(notNullValue()));
 
         final ActorSystem actorSystem = service.actorSystem();
         final ActorRef testActor = actorSystem.actorOf(Props.create(TestActor.class, () -> new TestActor()), TestActor.class.getSimpleName());
+
         final Inbox inbox = Inbox.create(actorSystem);
-        final Object msg = "CIAO COMPARI !!!";
-        testActor.tell(msg, inbox.getRef());
-        final Object reply = inbox.receive(Duration.create(1, TimeUnit.SECONDS));
-        assertThat(reply, is(notNullValue()));
-        assertThat(reply, is(msg));
-
-        for (int i = 0; i < 100; i++) {
-            testActor.tell("MSG #" + i, inbox.getRef());
+        final long startTime = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            testActor.tell(i, inbox.getRef());
         }
 
-        for (int i = 0; i < 100; i++) {
-            final Object msgReply = inbox.receive(Duration.create(1, TimeUnit.SECONDS));
-            assertThat(msgReply, is(notNullValue()));
-            log.info("Received reply: {}", msgReply);
-        }
-
-        testActor.tell(java.time.Duration.ofSeconds(2).toMillis(), ActorRef.noSender());
-        final Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-
-            @Override
-            public void run() {
-                // expecting this message to not be delivered because it will sent after the poison pill when the ActorSystemService is shutting down
-                testActor.tell("DROPPED MESSAGE", ActorRef.noSender());
+        ForkJoinPool.commonPool().execute(() -> {
+            while (true) {
+                try {
+                    inbox.receive(Duration.create(1, TimeUnit.SECONDS));
+                } catch (final Exception ex) {
+                    log.error("Inbox error", ex);
+                    return;
+                }
             }
-        }, 1000L);
+        });
+        final Inbox doneBox = Inbox.create(actorSystem);
+        testActor.tell(DONE, doneBox.getRef());
+        doneBox.receive(Duration.create(10, TimeUnit.SECONDS));
+        final long endTime = System.currentTimeMillis();
+        log.info("total time = {}", endTime - startTime);
     }
 
     @Override
     public void assemble(final ModuleAssembly assembly) throws AssemblyException {
-        assembleActorSystem(assembly);
+        AkkaAssemblers.assembleActorSystem(assembly);
     }
 
 }

@@ -29,14 +29,19 @@ import static co.runrightfast.akka.AkkaUtils.WILDCARD;
 import static co.runrightfast.commons.utils.ConcurrentUtils.awaitCountdownLatchIgnoringInterruptedException;
 import co.runrightfast.zest.composites.services.akka.ActorSystemService;
 import com.google.common.collect.ImmutableList;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import lombok.extern.slf4j.Slf4j;
+import org.qi4j.api.common.Optional;
+import org.qi4j.api.injection.scope.Service;
 import org.qi4j.api.injection.scope.Structure;
 import org.qi4j.api.service.ServiceActivation;
 import org.qi4j.api.structure.Application;
+import scala.concurrent.ExecutionContext;
 import scala.concurrent.duration.Duration;
 
 /**
@@ -52,6 +57,10 @@ public class ActorSystemServiceMixin implements ActorSystemService, ServiceActiv
     @Structure
     private Application application;
 
+    @Optional
+    @Service
+    private ExecutionContext executionContext;
+
     @Override
     public ActorSystem actorSystem() {
         return actorSystem;
@@ -59,7 +68,17 @@ public class ActorSystemServiceMixin implements ActorSystemService, ServiceActiv
 
     @Override
     public void activateService() throws Exception {
-        this.actorSystem = ActorSystem.create(application.name());
+        if (executionContext != null) {
+            final Config config = ConfigFactory.load();
+            this.actorSystem = ActorSystem.create(
+                    application.name(),
+                    config,
+                    getClass().getClassLoader(),
+                    executionContext
+            );
+        } else {
+            this.actorSystem = ActorSystem.create(application.name());
+        }
     }
 
     /**

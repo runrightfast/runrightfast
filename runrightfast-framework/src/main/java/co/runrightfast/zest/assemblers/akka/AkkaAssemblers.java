@@ -27,14 +27,14 @@ import org.qi4j.bootstrap.ModuleAssembly;
  */
 public interface AkkaAssemblers {
 
-    static ModuleAssembly assembleActorSystem(final ModuleAssembly assembly) {
-        assembly.services(ActorSystemService.class)
+    static ModuleAssembly assembleActorSystem(final ModuleAssembly module) {
+        module.services(ActorSystemService.class)
                 .withMixins(ActorSystemServiceMixin.class)
                 .withTypes(ServiceActivation.class)
                 .visibleIn(Visibility.application)
                 .instantiateOnStartup();
 
-        return assembly;
+        return module;
     }
 
 }
