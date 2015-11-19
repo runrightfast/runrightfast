@@ -28,11 +28,16 @@ import org.qi4j.bootstrap.ModuleAssembly;
 public interface AkkaAssemblers {
 
     static ModuleAssembly assembleActorSystem(final ModuleAssembly module) {
+        return assembleActorSystem(module, "application");
+    }
+
+    static ModuleAssembly assembleActorSystem(final ModuleAssembly module, final String actorSystemName) {
         module.services(ActorSystemService.class)
                 .withMixins(ActorSystemServiceMixin.class)
                 .withTypes(ServiceActivation.class)
                 .visibleIn(Visibility.application)
-                .instantiateOnStartup();
+                .instantiateOnStartup()
+                .identifiedBy(actorSystemName);
 
         return module;
     }

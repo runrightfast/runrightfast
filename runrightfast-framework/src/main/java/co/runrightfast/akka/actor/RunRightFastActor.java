@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
  * @param <WORKER> all messages are forwarded to the worker actor
  */
 @Slf4j
-public class RunRightFastActor<WORKER extends Actor> extends UntypedActor {
+public final class RunRightFastActor<WORKER extends Actor> extends UntypedActor {
 
     private final Props workerProps;
 
@@ -80,7 +80,6 @@ public class RunRightFastActor<WORKER extends Actor> extends UntypedActor {
     @Override
     public void onReceive(final Object msg) throws Exception {
         if (msg instanceof Terminated) {
-            log.warn("Worker was terminated. It will be re-created");
             createWorker();
         } else {
             worker.forward(msg, context());

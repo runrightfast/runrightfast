@@ -21,7 +21,6 @@ import akka.actor.Inbox;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
 import static co.runrightfast.zest.assemblers.akka.AkkaAssemblers.assembleActorSystem;
-import com.typesafe.config.ConfigFactory;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -42,11 +41,6 @@ import scala.concurrent.duration.Duration;
  */
 @Slf4j
 public class ActorSystemServiceTest extends AbstractQi4jTest {
-
-    static {
-        ConfigFactory.invalidateCaches();
-        System.setProperty("config.resource", String.format("/%s.conf", ActorSystemServiceTest.class.getSimpleName()));
-    }
 
     static class Worker extends UntypedActor {
 
@@ -92,6 +86,7 @@ public class ActorSystemServiceTest extends AbstractQi4jTest {
         final ActorSystemService service = this.module.findService(ActorSystemService.class).get();
         assertThat(service, is(notNullValue()));
         assertThat(service.actorSystem(), is(notNullValue()));
+        log.info("service identity = {}", service.identity().get());
 
         final ActorSystem actorSystem = service.actorSystem();
         final ActorRef testActor = actorSystem.actorOf(Props.create(TestActor.class, () -> new TestActor()), TestActor.class.getSimpleName());
@@ -126,7 +121,7 @@ public class ActorSystemServiceTest extends AbstractQi4jTest {
 
     @Override
     public void assemble(final ModuleAssembly assembly) throws AssemblyException {
-        assembleActorSystem(assembly);
+        assembleActorSystem(assembly, getClass().getSimpleName());
     }
 
 }

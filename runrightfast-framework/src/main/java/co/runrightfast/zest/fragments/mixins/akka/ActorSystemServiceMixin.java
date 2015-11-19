@@ -50,7 +50,7 @@ import scala.concurrent.duration.Duration;
  * @author alfio
  */
 @Slf4j
-public class ActorSystemServiceMixin implements ActorSystemService, ServiceActivation {
+public abstract class ActorSystemServiceMixin implements ActorSystemService, ServiceActivation {
 
     private ActorSystem actorSystem;
 
@@ -68,8 +68,8 @@ public class ActorSystemServiceMixin implements ActorSystemService, ServiceActiv
 
     @Override
     public void activateService() throws Exception {
+        final Config config = ConfigFactory.load(identity().get());
         if (executionContext != null) {
-            final Config config = ConfigFactory.load();
             this.actorSystem = ActorSystem.create(
                     application.name(),
                     config,
@@ -77,7 +77,10 @@ public class ActorSystemServiceMixin implements ActorSystemService, ServiceActiv
                     executionContext
             );
         } else {
-            this.actorSystem = ActorSystem.create(application.name());
+            this.actorSystem = ActorSystem.create(
+                    application.name(),
+                    config
+            );
         }
     }
 

@@ -21,7 +21,6 @@ import akka.actor.Inbox;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
 import co.runrightfast.zest.assemblers.akka.AkkaAssemblers;
-import com.typesafe.config.ConfigFactory;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,6 +31,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
+import org.qi4j.api.activation.ActivatorAdapter;
+import org.qi4j.api.structure.Module;
 import org.qi4j.bootstrap.AssemblyException;
 import org.qi4j.bootstrap.ModuleAssembly;
 import org.qi4j.test.AbstractQi4jTest;
@@ -44,20 +45,18 @@ import scala.concurrent.duration.Duration;
 @Slf4j
 public class ActorSystemServicePerfTest extends AbstractQi4jTest {
 
-    static {
-        ConfigFactory.invalidateCaches();
-        System.setProperty("config.resource", String.format("/%s.conf", ActorSystemServicePerfTest.class.getSimpleName()));
-    }
-
     static final Object DONE = new Object();
 
     static class Worker extends UntypedActor {
 
+        int msgReceivedCount;
+
         @Override
         public void onReceive(final Object msg) throws Exception {
+            msgReceivedCount++;
             sender().tell(msg, self());
             if (msg instanceof Integer && ((Integer) msg) % 10000 == 0) {
-                log.info("{}", msg);
+                log.info("{} : {}", msg, msgReceivedCount);
             }
         }
 
@@ -82,11 +81,8 @@ public class ActorSystemServicePerfTest extends AbstractQi4jTest {
 
     }
 
-    /**
-     * Send 1 million messages to Akka actor which simply replies with the message that was sent.
-     *
-     * @throws TimeoutException
-     */
+    static ActorRef testActor;
+
     @Test
     public void perfTest() throws TimeoutException, InterruptedException {
         final ActorSystemService service = this.module.findService(ActorSystemService.class).get();
@@ -95,34 +91,33 @@ public class ActorSystemServicePerfTest extends AbstractQi4jTest {
         assertThat(service.actorSystem(), is(notNullValue()));
 
         final ActorSystem actorSystem = service.actorSystem();
-        final ActorRef testActor = actorSystem.actorOf(Props.create(TestActor.class, () -> new TestActor()), TestActor.class.getSimpleName());
 
         final Inbox inbox = Inbox.create(actorSystem);
         final long startTime = System.currentTimeMillis();
 
-        final ExecutorService executor = Executors.newWorkStealingPool(8);
+        final ExecutorService inboxReceiveExecutor = Executors.newSingleThreadExecutor();
+        inboxReceiveExecutor.execute(() -> {
+            while (true) {
+                try {
+                    inbox.receive(Duration.create(250, TimeUnit.MILLISECONDS));
+                } catch (final Exception ex) {
+                    return;
+                }
+            }
+        });
 
-        final int latchCount = 4;
+        final ExecutorService messageSenderExecutor = Executors.newWorkStealingPool(8);
+        // messages sent will be : latchCount * 1 million
+        final int latchCount = 1;
         final CountDownLatch latch = new CountDownLatch(latchCount);
         for (int i = 0; i < latchCount; i++) {
-            executor.execute(() -> {
+            messageSenderExecutor.execute(() -> {
                 for (int ii = 0; ii < 1000000; ii++) {
                     testActor.tell(ii, inbox.getRef());
                 }
                 latch.countDown();
             });
         }
-
-        executor.execute(() -> {
-            while (true) {
-                try {
-                    inbox.receive(Duration.create(1, TimeUnit.SECONDS));
-                } catch (final Exception ex) {
-                    log.error("Inbox error", ex);
-                    return;
-                }
-            }
-        });
 
         latch.await();
         log.info("*** Sent all messages");
@@ -133,12 +128,26 @@ public class ActorSystemServicePerfTest extends AbstractQi4jTest {
         final long endTime = System.currentTimeMillis();
         log.info("total time = {}", endTime - startTime);
 
-        executor.shutdown();
+        messageSenderExecutor.shutdown();
+        inboxReceiveExecutor.shutdown();
     }
 
     @Override
     public void assemble(final ModuleAssembly assembly) throws AssemblyException {
-        AkkaAssemblers.assembleActorSystem(assembly);
+        AkkaAssemblers.assembleActorSystem(assembly, getClass().getSimpleName());
+        assembly.withActivators(TestSetup.class);
+    }
+
+    public static class TestSetup extends ActivatorAdapter<Module> {
+
+        @Override
+        public void afterActivation(final Module module) throws Exception {
+            final ActorSystemService service = module.findService(ActorSystemService.class).get();
+            final ActorSystem actorSystem = service.actorSystem();
+            testActor = actorSystem.actorOf(Props.create(TestActor.class, () -> new TestActor()), TestActor.class.getSimpleName());
+            log.info("created TestActor : {} : {}", testActor, testActor.path());
+        }
+
     }
 
 }
