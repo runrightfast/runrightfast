@@ -87,6 +87,7 @@ public class ActorSystemServiceTest extends AbstractQi4jTest {
         assertThat(service, is(notNullValue()));
         assertThat(service.actorSystem(), is(notNullValue()));
         log.info("service identity = {}", service.identity().get());
+        assertThat(service.actorSystem().name(), is(service.identity().get()));
 
         final ActorSystem actorSystem = service.actorSystem();
         final ActorRef testActor = actorSystem.actorOf(Props.create(TestActor.class, () -> new TestActor()), TestActor.class.getSimpleName());

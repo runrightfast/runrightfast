@@ -38,14 +38,17 @@ import java.util.concurrent.TimeoutException;
 import lombok.extern.slf4j.Slf4j;
 import org.qi4j.api.common.Optional;
 import org.qi4j.api.injection.scope.Service;
-import org.qi4j.api.injection.scope.Structure;
 import org.qi4j.api.service.ServiceActivation;
-import org.qi4j.api.structure.Application;
 import scala.concurrent.ExecutionContext;
 import scala.concurrent.duration.Duration;
 
 /**
- * The Application name will be used as the ActorSystem's name.
+ * The service identity will be used for :
+ *
+ * <ol>
+ * <li>as the ActorSystem's name
+ * <li>to load the TypeSafe config which will be used to create the ActorSystem
+ * </ol>
  *
  * @author alfio
  */
@@ -53,9 +56,6 @@ import scala.concurrent.duration.Duration;
 public abstract class ActorSystemServiceMixin implements ActorSystemService, ServiceActivation {
 
     private ActorSystem actorSystem;
-
-    @Structure
-    private Application application;
 
     @Optional
     @Service
@@ -71,14 +71,14 @@ public abstract class ActorSystemServiceMixin implements ActorSystemService, Ser
         final Config config = ConfigFactory.load(identity().get());
         if (executionContext != null) {
             this.actorSystem = ActorSystem.create(
-                    application.name(),
+                    identity().get(),
                     config,
                     getClass().getClassLoader(),
                     executionContext
             );
         } else {
             this.actorSystem = ActorSystem.create(
-                    application.name(),
+                    identity().get(),
                     config
             );
         }

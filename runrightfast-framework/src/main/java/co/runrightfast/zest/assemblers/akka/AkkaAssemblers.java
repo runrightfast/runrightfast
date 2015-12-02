@@ -27,6 +27,13 @@ import org.qi4j.bootstrap.ModuleAssembly;
  */
 public interface AkkaAssemblers {
 
+    /**
+     * delegates to {@link AkkaAssemblers#assembleActorSystem(org.qi4j.bootstrap.ModuleAssembly, java.lang.String) }
+     * using "application" as the actorSystemName.
+     *
+     * @param module module
+     * @return ModuleAssembly
+     */
     static ModuleAssembly assembleActorSystem(final ModuleAssembly module) {
         return assembleActorSystem(module, "application");
     }

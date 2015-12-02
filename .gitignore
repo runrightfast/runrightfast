@@ -3,3 +3,4 @@
 /.gradle/
 /runrightfast-incubator/build/
 /runrightfast-framework-impl/build/
+/runrightfast-framework/target/

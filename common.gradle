@@ -245,7 +245,7 @@ dependencyManagement {
             entry 'scala-library'
         }
         
-        dependencySet(group:'com.typesafe.akka', version: "2.4.0") {
+        dependencySet(group:'com.typesafe.akka', version: "2.4.1") {
             entry 'akka-actor_2.11'
             entry 'akka-agent_2.11'
             entry 'akka-cluster_2.11'
@@ -257,7 +257,14 @@ dependencyManagement {
             entry 'akka-protobuf_2.11'
             entry 'akka-remote_2.11'
             entry 'akka-multi-node-testkit_2.11'
-            entry 'akka-testkit_2.11'
+            entry 'akka-testkit_2.11'            
+        }
+        
+        dependencySet(group:'com.typesafe.akka', version: "2.0-M2") {
+            entry 'akka-stream-experimental_2.11'
+            entry 'akka-http-core-experimental_2.11'
+            entry 'akka-http-experimental_2.11' 
+            entry 'akka-stream-testkit-experimental_2.11'
         }
      }
 }

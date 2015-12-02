@@ -20,7 +20,13 @@ dependencies {
     
     compile group:'org.reactivestreams', name:'reactive-streams'
     
-    compile group: 'com.typesafe.akka', name: 'akka-actor_2.11'
+    compile group:'com.typesafe.akka', name:'akka-actor_2.11'
+    compile group:'com.typesafe.akka', name:'akka-stream-experimental_2.11'
+    compile group:'com.typesafe.akka', name:'akka-http-core-experimental_2.11'
+    compile group:'com.typesafe.akka', name:'akka-http-experimental_2.11'
     
     runtime group:'org.slf4j', name:'slf4j-jdk14'
+    
+    testCompile group:'com.typesafe.akka', name:'akka-testkit_2.11'
+    testCompile group:'com.typesafe.akka', name:'akka-stream-testkit-experimental_2.11'
 }
