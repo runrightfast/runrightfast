@@ -265,6 +265,8 @@ dependencyManagement {
             entry 'akka-http-core-experimental_2.11'
             entry 'akka-http-experimental_2.11' 
             entry 'akka-stream-testkit-experimental_2.11'
+            entry 'akka-http-testkit-experimental_2.11'
+            entry 'akka-http-jackson-experimental_2.11'
         }
      }
 }

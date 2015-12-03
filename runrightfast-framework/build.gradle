@@ -29,4 +29,5 @@ dependencies {
     
     testCompile group:'com.typesafe.akka', name:'akka-testkit_2.11'
     testCompile group:'com.typesafe.akka', name:'akka-stream-testkit-experimental_2.11'
+    testCompile group:'com.typesafe.akka', name:'akka-http-testkit-experimental_2.11'
 }
